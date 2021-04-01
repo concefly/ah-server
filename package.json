@@ -9,7 +9,7 @@
     "dev": "nodemon -e ts --watch src --watch __test__ __test__/run.ts",
     "ci": "ah-workflow ci",
     "build": "ah-workflow build",
-    "prepublishOnly": "npm run ci && npm run build"
+    "release": "npm run ci && npm run build && release-it"
   },
   "dependencies": {
     "@types/koa": "^2.11.6",
@@ -30,6 +30,7 @@
     "@types/node": "^14.11.10",
     "ah-workflow": "^1.0.6",
     "nodemon": "^2.0.5",
+    "release-it": "^14.5.1",
     "ts-node": "^9.0.0",
     "typescript": "^4.0.3"
   }

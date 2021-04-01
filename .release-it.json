@@ -1,0 +1,9 @@
+{
+  "git": {
+    "requireCleanWorkingDir": true,
+    "requireBranch": "master",
+    "commit": true,
+    "tag": true,
+    "push": true
+  }
+}
