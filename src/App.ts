@@ -5,7 +5,6 @@ import koaBody from 'koa-body';
 import urllib, { RequestOptions } from 'urllib';
 import { Logger } from 'ah-logger';
 import { BaseScheduler } from './Scheduler';
-import { BaseService } from './Service';
 import { IConfig, IContext, IService } from '.';
 import { ErrorTypeEnum } from './error';
 import { pick, tryParseIntProperty, validate } from './util';
@@ -27,18 +26,15 @@ export abstract class BaseApp extends Koa {
     super();
   }
 
-  // 注入 app 扩展
-  public abstract service: IService = {};
-  /** controller 列表 */
-  public abstract controllerList: BaseController[] = [];
-  /** 定时任务列表 */
-  public abstract schedulerList: BaseScheduler[] = [];
+  abstract service: IService = {};
+  abstract controllers: BaseController[] = [];
+  abstract schedulers: BaseScheduler[] = [];
 
-  public logger = new Logger('APP');
+  logger = new Logger('APP');
 
   private server?: Server;
 
-  public async curl<T>(url: string, opt?: RequestOptions) {
+  async curl<T>(url: string, opt?: RequestOptions) {
     return urllib.request<T>(url, opt);
   }
 
@@ -55,19 +51,12 @@ export abstract class BaseApp extends Koa {
     });
   }
 
-  private async initService() {
-    const list: BaseService[] = Object.values(this.service);
-    await Promise.all(list.map(s => s.init?.()));
-
-    this.logger.info(`service: ${list.map(s => s.name)}`);
-  }
-
   private async initController() {
     this.use(koaBody());
 
     // 构造 router
     const router = new Router<any, IContext>();
-    this.controllerList.forEach(ctrlIns => {
+    this.controllers.forEach(ctrlIns => {
       ctrlIns.mapper.forEach(m => {
         this.logger.info(
           `register controller: ${m.method} ${m.path} -> ${ctrlIns.name}.${m.handler.name}`
@@ -109,13 +98,11 @@ export abstract class BaseApp extends Koa {
 
     this.use(router.routes());
     this.use(router.allowedMethods());
-
-    await Promise.all(this.controllerList.map(c => c.init?.()));
   }
 
   /** 启动定时调度 */
   private async initScheduler() {
-    const list = this.schedulerList;
+    const list = this.schedulers;
     if (list.length === 0) return;
 
     const schedulerLogger = this.logger.extend('Scheduler');
@@ -157,11 +144,10 @@ export abstract class BaseApp extends Koa {
     this.logger.info(`start scheduler: ${list.map(s => s.name)}`);
   }
 
-  public async start() {
+  async start() {
     this.logger.info(this.config.sequelize());
 
     await this.initCommon();
-    await this.initService();
     await this.initController();
     await this.initScheduler();
 
@@ -170,7 +156,7 @@ export abstract class BaseApp extends Koa {
     this.logger.info(`app start at localhost:${port}`);
   }
 
-  public async stop(): Promise<void> {
+  async stop(): Promise<void> {
     if (!this.server) return;
     const server = this.server;
 
@@ -184,6 +170,3 @@ export abstract class BaseApp extends Koa {
     });
   }
 }
-
-/** @deprecated 用 BaseAPP 替代 */
-export const App = BaseApp;

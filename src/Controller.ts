@@ -14,6 +14,3 @@ export type IControllerMapperItem = {
 export abstract class BaseController extends BaseService {
   abstract readonly mapper: IControllerMapperItem[];
 }
-
-/** @deprecated */
-export const Controller = BaseController;

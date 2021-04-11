@@ -11,6 +11,3 @@ export class BaseConfig {
       .join(' ');
   }
 }
-
-/** @deprecated */
-export const Config = BaseConfig;

@@ -14,9 +14,4 @@ export class BaseService {
   }
 
   protected logger = this.app.logger.extend(this.name);
-
-  init?(): Promise<void>;
 }
-
-/** @deprecated */
-export const Service = BaseService;

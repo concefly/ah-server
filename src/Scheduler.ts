@@ -7,6 +7,3 @@ export class BaseScheduler extends BaseService {
 
   async invoke(): Promise<void> {}
 }
-
-/** @deprecated */
-export const Scheduler = BaseScheduler;
