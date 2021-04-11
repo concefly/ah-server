@@ -1,8 +1,8 @@
 declare module '.' {
-  interface IConfig extends Config {}
+  interface IConfig extends BaseConfig {}
 }
 
-export class Config {
+export class BaseConfig {
   readonly LOCAL_PORT: number = +(process.env.LOCAL_PORT || 10001);
 
   sequelize() {
@@ -11,3 +11,6 @@ export class Config {
       .join(' ');
   }
 }
+
+/** @deprecated */
+export const Config = BaseConfig;

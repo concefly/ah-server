@@ -1,12 +1,19 @@
-import { App, Controller, IContext, IControllerMapperItem, IService, Service } from '../src';
+import {
+  BaseApp,
+  BaseController,
+  IContext,
+  IControllerMapperItem,
+  IService,
+  BaseService,
+} from '../src';
 
-class EchoService extends Service {
+class EchoService extends BaseService {
   echo(text: string) {
     return text;
   }
 }
 
-class EchoController extends Controller {
+class EchoController extends BaseController {
   mapper: IControllerMapperItem[] = [
     {
       path: '/echo',
@@ -27,11 +34,11 @@ class EchoController extends Controller {
   }
 }
 
-export class TestApp extends App {
+export class TestApp extends BaseApp {
   service: IService = {
     echo: new EchoService(this),
   };
-  controllerList: Controller[] = [new EchoController(this)];
+  controllerList: BaseController[] = [new EchoController(this)];
   schedulerList = [];
   logger = {
     info() {},

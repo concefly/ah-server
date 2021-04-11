@@ -1,6 +1,6 @@
 import { Schema } from 'jsonschema';
 import { IContext } from '.';
-import { Service } from './Service';
+import { BaseService } from './Service';
 
 type IRouterMethod = 'GET' | 'POST' | 'DELETE' | 'PUT';
 
@@ -11,6 +11,9 @@ export type IControllerMapperItem = {
   query?: { schema: Schema };
 };
 
-export abstract class Controller extends Service {
+export abstract class BaseController extends BaseService {
   abstract readonly mapper: IControllerMapperItem[];
 }
+
+/** @deprecated */
+export const Controller = BaseController;

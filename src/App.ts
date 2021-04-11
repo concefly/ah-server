@@ -3,17 +3,17 @@ import Koa from 'koa';
 import Router from 'koa-router';
 import koaBody from 'koa-body';
 import urllib, { RequestOptions } from 'urllib';
-import { Logger } from './Logger';
-import { Scheduler } from './Scheduler';
-import { Service } from './Service';
+import { Logger } from 'ah-logger';
+import { BaseScheduler } from './Scheduler';
+import { BaseService } from './Service';
 import { IConfig, IContext, IService } from '.';
 import { ErrorTypeEnum } from './error';
 import { pick, tryParseIntProperty, validate } from './util';
-import { Controller } from './Controller';
+import { BaseController } from './Controller';
 import { Server } from 'http';
 
 declare module '.' {
-  interface IApplication extends App {}
+  interface IApplication extends BaseApp {}
 
   // eslint-disable-next-line
   interface IContext {
@@ -22,7 +22,7 @@ declare module '.' {
   }
 }
 
-export abstract class App extends Koa {
+export abstract class BaseApp extends Koa {
   constructor(readonly config: IConfig) {
     super();
   }
@@ -30,11 +30,11 @@ export abstract class App extends Koa {
   // 注入 app 扩展
   public abstract service: IService = {};
   /** controller 列表 */
-  public abstract controllerList: Controller[] = [];
+  public abstract controllerList: BaseController[] = [];
   /** 定时任务列表 */
-  public abstract schedulerList: Scheduler[] = [];
+  public abstract schedulerList: BaseScheduler[] = [];
 
-  public logger = new Logger();
+  public logger = new Logger('APP');
 
   private server?: Server;
 
@@ -56,7 +56,7 @@ export abstract class App extends Koa {
   }
 
   private async initService() {
-    const list: Service[] = Object.values(this.service);
+    const list: BaseService[] = Object.values(this.service);
     await Promise.all(list.map(s => s.init?.()));
 
     this.logger.info(`service: ${list.map(s => s.name)}`);
@@ -184,3 +184,6 @@ export abstract class App extends Koa {
     });
   }
 }
+
+/** @deprecated 用 BaseAPP 替代 */
+export const App = BaseApp;

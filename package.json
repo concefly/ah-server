@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@types/koa": "^2.11.6",
+    "ah-logger": "^0.1.4",
     "cron": "^1.8.2",
     "dayjs": "^1.9.4",
     "jsonschema": "^1.4.0",
