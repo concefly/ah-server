@@ -38,8 +38,8 @@ export class TestApp extends BaseApp {
   service: IService = {
     echo: new EchoService(this),
   };
-  controllerList: BaseController[] = [new EchoController(this)];
-  schedulerList = [];
+  controllers: BaseController[] = [new EchoController(this)];
+  schedulers = [];
   logger = {
     info() {},
     error(msg: string) {
