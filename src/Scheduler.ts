@@ -1,9 +1,9 @@
 import { BaseService } from './Service';
 
 /** 基础调度服务 */
-export class BaseScheduler extends BaseService {
-  cron?: string;
-  interval?: number;
+export abstract class BaseScheduler extends BaseService {
+  immediately?: boolean;
 
-  async invoke(): Promise<void> {}
+  abstract timer: { type: 'cron'; cron: string } | { type: 'interval'; interval: number };
+  abstract invoke(): Promise<void>;
 }

@@ -107,34 +107,39 @@ export abstract class BaseApp extends Koa {
 
     const schedulerLogger = this.logger.extend('Scheduler');
     const startList = list.map(s => {
-      if (s.cron) {
+      if (s.timer.type === 'cron') {
+        const { cron } = s.timer;
         return () => {
           new CronJob(
-            s.cron!,
+            cron,
             () => {
               s.invoke().catch(e => {
                 schedulerLogger.error(`${s.name} error: ${e.message || e}`);
               });
             },
             undefined,
-            false,
+            s.immediately, // start
             undefined,
             undefined,
             true
           ).start();
         };
-      } else if (s.interval) {
+      }
+
+      if (s.timer.type === 'interval') {
+        const { interval } = s.timer;
         return () => {
           const invoke = () => {
             s.invoke()
-              .then(() => setTimeout(invoke, s.interval))
+              .then(() => setTimeout(invoke, interval))
               .catch(e => {
                 schedulerLogger.error(`${s.name} error: ${e.message || e}`);
-                setTimeout(invoke, s.interval);
+                setTimeout(invoke, interval);
               });
           };
 
-          invoke();
+          if (s.immediately) invoke();
+          else setTimeout(invoke, interval);
         };
       }
     });
@@ -149,11 +154,13 @@ export abstract class BaseApp extends Koa {
 
     await this.initCommon();
     await this.initController();
-    await this.initScheduler();
 
     const port = this.config.LOCAL_PORT;
     this.server = this.listen(port);
     this.logger.info(`app start at localhost:${port}`);
+
+    // scheduler 放到启动后
+    await this.initScheduler();
   }
 
   async stop(): Promise<void> {
