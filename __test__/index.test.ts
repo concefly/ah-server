@@ -1,5 +1,5 @@
 import { HttpClientResponse } from 'urllib';
-import { Config, pick } from '../src';
+import { BaseConfig, pick } from '../src';
 import { TestApp } from './DemoApp';
 
 function inspectResp(resp: HttpClientResponse<any>) {
@@ -7,7 +7,7 @@ function inspectResp(resp: HttpClientResponse<any>) {
 }
 
 describe('App', () => {
-  const config = new Config();
+  const config = new BaseConfig();
   const app = new TestApp(config);
 
   beforeAll(() => app.start());
