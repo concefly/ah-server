@@ -10,6 +10,7 @@ import { ErrorTypeEnum } from './error';
 import { pick, tryParseIntProperty, validate } from './util';
 import { BaseController } from './Controller';
 import { Server } from 'http';
+import { CloseEvt, ReadyEvt } from './Event';
 
 declare module '.' {
   interface IApplication extends BaseApp {}
@@ -161,19 +162,21 @@ export abstract class BaseApp extends Koa {
 
     // scheduler 放到启动后
     await this.initScheduler();
+
+    this.emit(ReadyEvt);
   }
 
   async stop(): Promise<void> {
     if (!this.server) return;
     const server = this.server;
 
-    return new Promise((resolve, reject) => {
+    return new Promise<void>((resolve, reject) => {
       // 优雅退出
       // @see https://zhuanlan.zhihu.com/p/275312155?utm_source=wechat_session&utm_medium=social&utm_oi=39191756931072
       server.close(err => {
         if (err) return reject(err);
         return resolve();
       });
-    });
+    }).finally(() => this.emit(CloseEvt));
   }
 }
