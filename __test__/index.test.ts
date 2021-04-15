@@ -34,4 +34,10 @@ describe('App', () => {
     const r3 = await app.curl<any>('http://localhost:10001/echo?text=100', { dataType: 'json' });
     expect(inspectResp(r3)).toMatchSnapshot();
   });
+
+  it('middleware', async () => {
+    const r = await app.curl<any>('http://localhost:10001/echo?text=hi', { dataType: 'json' });
+    expect(r.headers['x-a']).toEqual('a');
+    expect(r.headers['x-b']).toEqual('b');
+  });
 });

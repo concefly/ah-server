@@ -5,6 +5,7 @@ import {
   IControllerMapperItem,
   IService,
   BaseService,
+  IMiddleware,
 } from '../src';
 
 class EchoService extends BaseService {
@@ -34,12 +35,23 @@ class EchoController extends BaseController {
   }
 }
 
+const testMiddlewareA: IMiddleware = (ctx, next) => {
+  ctx.response.set({ 'x-a': 'a' });
+  next();
+};
+
+const testMiddlewareB: IMiddleware = (ctx, next) => {
+  ctx.response.set({ 'x-b': 'b' });
+  next();
+};
+
 export class TestApp extends BaseApp {
   service: IService = {
     echo: new EchoService(this),
   };
   controllers: BaseController[] = [new EchoController(this)];
   schedulers = [];
+  middlewares = [testMiddlewareA, testMiddlewareB];
   logger = {
     info() {},
     error(msg: string) {
