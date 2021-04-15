@@ -11,6 +11,7 @@ import { pick, tryParseIntProperty, validate } from './util';
 import { BaseController, IMiddleware } from './Controller';
 import { Server } from 'http';
 import { CloseEvt, ReadyEvt } from './Event';
+import { EventEmitter } from 'events';
 
 declare module '.' {
   interface IApplication extends BaseApp {}
@@ -22,23 +23,19 @@ declare module '.' {
   }
 }
 
-export abstract class BaseApp extends Koa {
-  /** @deprecated 用 `middlewares` 替代 */
-  middleware: never;
+export abstract class BaseApp extends EventEmitter {
+  private koa = new Koa();
 
   constructor(readonly config: IConfig) {
     super();
   }
 
   abstract service: IService = {};
-
   abstract controllers: BaseController[] = [];
   middlewares: IMiddleware[] = [];
-
   abstract schedulers: BaseScheduler[] = [];
 
   logger = new Logger('APP');
-
   private server?: Server;
 
   async curl<T>(url: string, opt?: RequestOptions) {
@@ -47,10 +44,10 @@ export abstract class BaseApp extends Koa {
 
   private async initCommon() {
     // 扩展 ctx
-    Object.assign(this.context, { validate, app: this });
+    Object.assign(this.koa.context, { validate, app: this });
 
     // 全局错误
-    this.on('error', err => {
+    this.koa.on('error', err => {
       let msg = err.message || err;
       if (err.stack) msg += '\n' + err.stack;
 
@@ -59,7 +56,7 @@ export abstract class BaseApp extends Koa {
   }
 
   private async initController() {
-    this.use(koaBody());
+    this.koa.use(koaBody());
 
     // 构造 router
     const router = new Router<any, IContext>();
@@ -107,8 +104,8 @@ export abstract class BaseApp extends Koa {
       });
     });
 
-    this.use(router.routes());
-    this.use(router.allowedMethods());
+    this.koa.use(router.routes());
+    this.koa.use(router.allowedMethods());
   }
 
   /** 启动定时调度 */
@@ -167,13 +164,13 @@ export abstract class BaseApp extends Koa {
     await this.initController();
 
     const port = this.config.LOCAL_PORT;
-    this.server = this.listen(port);
+    this.server = this.koa.listen(port);
     this.logger.info(`app start at localhost:${port}`);
 
     // scheduler 放到启动后
     await this.initScheduler();
 
-    this.emit(ReadyEvt);
+    this.emit(ReadyEvt, { server: this.server } as ReadyEvt);
   }
 
   async stop(): Promise<void> {
