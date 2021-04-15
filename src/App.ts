@@ -8,7 +8,7 @@ import { BaseScheduler } from './Scheduler';
 import { IConfig, IContext, IService } from '.';
 import { ErrorTypeEnum } from './error';
 import { pick, tryParseIntProperty, validate } from './util';
-import { BaseController } from './Controller';
+import { BaseController, IMiddleware } from './Controller';
 import { Server } from 'http';
 import { CloseEvt, ReadyEvt } from './Event';
 
@@ -23,12 +23,18 @@ declare module '.' {
 }
 
 export abstract class BaseApp extends Koa {
+  /** @deprecated 用 `middlewares` 替代 */
+  middleware: never;
+
   constructor(readonly config: IConfig) {
     super();
   }
 
   abstract service: IService = {};
+
   abstract controllers: BaseController[] = [];
+  middlewares: IMiddleware[] = [];
+
   abstract schedulers: BaseScheduler[] = [];
 
   logger = new Logger('APP');
@@ -63,37 +69,41 @@ export abstract class BaseApp extends Koa {
           `register controller: ${m.method} ${m.path} -> ${ctrlIns.name}.${m.handler.name}`
         );
 
-        router.register(m.path, Array.isArray(m.method) ? m.method : [m.method], async ctx => {
-          try {
-            const q = m.query
-              ? ctx.validate<any>(
-                  {
-                    ...tryParseIntProperty(ctx.params),
-                    ...tryParseIntProperty(ctx.request.query),
-                    ...ctx.request.body,
-                  },
-                  m.query.schema
-                )
-              : undefined;
+        router.register(m.path, Array.isArray(m.method) ? m.method : [m.method], [
+          ...this.middlewares,
+          ...(m.middlewares || []),
+          async ctx => {
+            try {
+              const q = m.query
+                ? ctx.validate<any>(
+                    {
+                      ...tryParseIntProperty(ctx.params),
+                      ...tryParseIntProperty(ctx.request.query),
+                      ...ctx.request.body,
+                    },
+                    m.query.schema
+                  )
+                : undefined;
 
-            const data = await m.handler.call(ctrlIns, ctx, q);
+              const data = await m.handler.call(ctrlIns, ctx, q);
 
-            if (data) {
-              ctx.set('content-type', 'application/json');
-              ctx.body = { ...ctx.body, data };
+              if (data) {
+                ctx.set('content-type', 'application/json');
+                ctx.body = { ...ctx.body, data };
+              }
+            } catch (err) {
+              // 自定义异常
+              if (Object.values(ErrorTypeEnum).includes(err.type)) {
+                ctx.status = err.status;
+                ctx.body = pick(err, ['message', 'type', 'code', 'status']);
+                return;
+              }
+
+              // 其他异常外抛
+              throw err;
             }
-          } catch (err) {
-            // 自定义异常
-            if (Object.values(ErrorTypeEnum).includes(err.type)) {
-              ctx.status = err.status;
-              ctx.body = pick(err, ['message', 'type', 'code', 'status']);
-              return;
-            }
-
-            // 其他异常外抛
-            throw err;
-          }
-        });
+          },
+        ]);
       });
     });
 
