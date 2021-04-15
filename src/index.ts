@@ -4,7 +4,7 @@ import { DefaultContext, DefaultState, ParameterizedContext } from 'koa';
 export interface IApplication {}
 export interface IService {}
 
-export interface IContext extends ParameterizedContext<DefaultState, DefaultContext> {}
+export interface IContext extends Omit<ParameterizedContext<DefaultState, DefaultContext>, 'app'> {}
 export interface IConfig {
   LOCAL_PORT: number;
 }
