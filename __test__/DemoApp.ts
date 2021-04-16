@@ -35,6 +35,20 @@ class EchoController extends BaseController {
   }
 }
 
+class HomeController extends BaseController {
+  mapper: IControllerMapperItem[] = [
+    {
+      path: '/',
+      method: ['GET'],
+      handler: this.index,
+    },
+  ];
+
+  async index(ctx: IContext) {
+    ctx.body = '<h1>Hi</h1>';
+  }
+}
+
 const testMiddlewareA: IMiddleware = (ctx, next) => {
   ctx.response.set({ 'x-a': 'a' });
   next();
@@ -49,11 +63,13 @@ export class TestApp extends BaseApp {
   service: IService = {
     echo: new EchoService(this),
   };
-  controllers: BaseController[] = [new EchoController(this)];
+  controllers: BaseController[] = [new HomeController(this), new EchoController(this)];
   schedulers = [];
   middlewares = [testMiddlewareA, testMiddlewareB];
   logger = {
-    info() {},
+    info(msg: string) {
+      console.log(msg);
+    },
     error(msg: string) {
       throw new Error(msg);
     },

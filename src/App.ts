@@ -1,17 +1,19 @@
 import { CronJob } from 'cron';
-import Koa from 'koa';
-import Router from 'koa-router';
-import koaBody from 'koa-body';
-import urllib, { RequestOptions } from 'urllib';
+import * as Koa from 'koa';
+import * as Router from 'koa-router';
+import * as koaBody from 'koa-body';
+import * as urllib from 'urllib';
 import { Logger } from 'ah-logger';
 import { BaseScheduler } from './Scheduler';
 import { IConfig, IContext, IService } from '.';
 import { ErrorTypeEnum } from './error';
 import { pick, tryParseIntProperty, validate } from './util';
 import { BaseController, IMiddleware } from './Controller';
-import { Server } from 'http';
+import * as http from 'http';
+import * as https from 'https';
 import { CloseEvt, ReadyEvt } from './Event';
 import { EventEmitter } from 'events';
+import * as fs from 'fs';
 
 declare module '.' {
   interface IApplication extends BaseApp {}
@@ -36,9 +38,10 @@ export abstract class BaseApp extends EventEmitter {
   abstract schedulers: BaseScheduler[] = [];
 
   logger = new Logger('APP');
-  private server?: Server;
 
-  async curl<T>(url: string, opt?: RequestOptions) {
+  private httpServer?: http.Server;
+
+  async curl<T>(url: string, opt?: urllib.RequestOptions) {
     return urllib.request<T>(url, opt);
   }
 
@@ -164,18 +167,32 @@ export abstract class BaseApp extends EventEmitter {
     await this.initController();
 
     const port = this.config.LOCAL_PORT;
-    this.server = this.koa.listen(port);
+    const callback = this.koa.callback();
+
+    const server = (this.httpServer =
+      this.config.HTTPS_KEY && this.config.HTTPS_CERT
+        ? https.createServer(
+            {
+              key: fs.readFileSync(this.config.HTTPS_KEY, 'utf-8'),
+              cert: fs.readFileSync(this.config.HTTPS_CERT, 'utf-8'),
+            },
+            callback as any
+          )
+        : http.createServer(callback as any));
+
+    server.listen(port);
+
     this.logger.info(`app start at localhost:${port}`);
 
     // scheduler 放到启动后
     await this.initScheduler();
 
-    this.emit(ReadyEvt, { server: this.server } as ReadyEvt);
+    this.emit(ReadyEvt, { server } as ReadyEvt);
   }
 
   async stop(): Promise<void> {
-    if (!this.server) return;
-    const server = this.server;
+    if (!this.httpServer) return;
+    const server = this.httpServer;
 
     return new Promise<void>((resolve, reject) => {
       // 优雅退出
