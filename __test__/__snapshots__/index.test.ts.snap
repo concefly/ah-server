@@ -21,11 +21,8 @@ Object {
 exports[`App validate 400 1`] = `
 Object {
   "data": Object {
-    "code": "unknown",
-    "message": "is not of a type(s) string",
-    "status": 400,
-    "type": "custom",
+    "data": "100",
   },
-  "status": 400,
+  "status": 200,
 }
 `;
