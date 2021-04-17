@@ -96,6 +96,7 @@ export abstract class BaseApp extends Koa {
             };
 
             handler()
+              .then(() => next())
               .catch(err => {
                 // 自定义异常
                 if (Object.values(ErrorTypeEnum).includes(err.type)) {
@@ -106,8 +107,7 @@ export abstract class BaseApp extends Koa {
 
                 // 其他异常外抛
                 throw err;
-              })
-              .finally(() => next());
+              });
           },
         ];
 
