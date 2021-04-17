@@ -7,7 +7,7 @@ import { Logger } from 'ah-logger';
 import { BaseScheduler } from './Scheduler';
 import { IConfig, IContext, IService } from '.';
 import { ErrorTypeEnum } from './error';
-import { pick, tryParseIntProperty, validate } from './util';
+import { pick, validate } from './util';
 import { BaseController, IMiddleware } from './Controller';
 import * as http from 'http';
 import * as https from 'https';
@@ -79,8 +79,8 @@ export abstract class BaseApp extends Koa {
               const q = m.query
                 ? ctx.validate<any>(
                     {
-                      ...tryParseIntProperty(ctx.params),
-                      ...tryParseIntProperty(ctx.request.query),
+                      ...ctx.params,
+                      ...ctx.request.query,
                       ...ctx.request.body,
                     },
                     m.query.schema
