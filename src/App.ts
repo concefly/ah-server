@@ -12,7 +12,6 @@ import { BaseController, IMiddleware } from './Controller';
 import * as http from 'http';
 import * as https from 'https';
 import { CloseEvt, ReadyEvt } from './Event';
-import { EventEmitter } from 'events';
 import * as fs from 'fs';
 
 declare module '.' {
@@ -25,8 +24,9 @@ declare module '.' {
   }
 }
 
-export abstract class BaseApp extends EventEmitter {
-  private koa = new Koa();
+export abstract class BaseApp extends Koa {
+  /** @deprecated use `middlewares` instead */
+  middleware: never;
 
   constructor(readonly config: IConfig) {
     super();
@@ -47,10 +47,10 @@ export abstract class BaseApp extends EventEmitter {
 
   private async initCommon() {
     // 扩展 ctx
-    Object.assign(this.koa.context, { validate, app: this });
+    Object.assign(this.context, { validate, app: this });
 
     // 全局错误
-    this.koa.on('error', err => {
+    this.on('error', err => {
       let msg = err.message || err;
       if (err.stack) msg += '\n' + err.stack;
 
@@ -59,7 +59,7 @@ export abstract class BaseApp extends EventEmitter {
   }
 
   private async initController() {
-    this.koa.use(koaBody());
+    this.use(koaBody());
 
     // 构造 router
     const router = new Router<any, IContext>();
@@ -69,11 +69,13 @@ export abstract class BaseApp extends EventEmitter {
           `register controller: ${m.method} ${m.path} -> ${ctrlIns.name}.${m.handler.name}`
         );
 
-        router.register(m.path, Array.isArray(m.method) ? m.method : [m.method], [
+        const name = [ctrlIns.name, m.handler.name].join('.');
+        const methods = Array.isArray(m.method) ? m.method : [m.method];
+        const middlewares = [
           ...this.middlewares,
           ...(m.middlewares || []),
-          async ctx => {
-            try {
+          (ctx: IContext, next: any) => {
+            const handler = async () => {
               const q = m.query
                 ? ctx.validate<any>(
                     {
@@ -89,26 +91,35 @@ export abstract class BaseApp extends EventEmitter {
 
               if (data) {
                 ctx.set('content-type', 'application/json');
-                ctx.body = { ...ctx.body, data };
+                ctx.body = { ...(ctx.body as any), data };
               }
-            } catch (err) {
-              // 自定义异常
-              if (Object.values(ErrorTypeEnum).includes(err.type)) {
-                ctx.status = err.status;
-                ctx.body = pick(err, ['message', 'type', 'code', 'status']);
-                return;
-              }
+            };
 
-              // 其他异常外抛
-              throw err;
-            }
+            handler()
+              .catch(err => {
+                // 自定义异常
+                if (Object.values(ErrorTypeEnum).includes(err.type)) {
+                  ctx.status = err.status;
+                  ctx.body = pick(err, ['message', 'type', 'code', 'status']);
+                  return;
+                }
+
+                // 其他异常外抛
+                throw err;
+              })
+              .finally(() => next());
           },
-        ]);
+        ];
+
+        if (methods.includes('GET')) router.get(name, m.path, ...middlewares);
+        if (methods.includes('POST')) router.post(name, m.path, ...middlewares);
+        if (methods.includes('PUT')) router.put(name, m.path, ...middlewares);
+        if (methods.includes('DELETE')) router.delete(name, m.path, ...middlewares);
       });
     });
 
-    this.koa.use(router.routes());
-    this.koa.use(router.allowedMethods());
+    this.use(router.routes());
+    this.use(router.allowedMethods());
   }
 
   /** 启动定时调度 */
@@ -167,7 +178,7 @@ export abstract class BaseApp extends EventEmitter {
     await this.initController();
 
     const port = this.config.LOCAL_PORT;
-    const callback = this.koa.callback();
+    const callback = this.callback();
 
     const server = (this.httpServer =
       this.config.HTTPS_KEY && this.config.HTTPS_CERT
@@ -176,12 +187,11 @@ export abstract class BaseApp extends EventEmitter {
               key: fs.readFileSync(this.config.HTTPS_KEY, 'utf-8'),
               cert: fs.readFileSync(this.config.HTTPS_CERT, 'utf-8'),
             },
-            callback as any
+            callback
           )
-        : http.createServer(callback as any));
+        : http.createServer(callback));
 
     server.listen(port);
-
     this.logger.info(`app start at localhost:${port}`);
 
     // scheduler 放到启动后

@@ -1,10 +1,10 @@
-import 'koa';
-import { DefaultContext, DefaultState, ParameterizedContext } from 'koa';
+import * as Koa from 'koa';
 
 export interface IApplication {}
 export interface IService {}
 
-export interface IContext extends Omit<ParameterizedContext<DefaultState, DefaultContext>, 'app'> {}
+export interface IContext extends Koa.Context {}
+
 export interface IConfig {
   LOCAL_PORT: number;
 }
