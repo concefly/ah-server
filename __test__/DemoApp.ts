@@ -52,12 +52,12 @@ class HomeController extends BaseController {
 
 const testMiddlewareA: IMiddleware = async (ctx, next) => {
   ctx.response.set({ 'x-a': 'a' });
-  next();
+  return next();
 };
 
 const testMiddlewareB: IMiddleware = async (ctx, next) => {
   ctx.response.set({ 'x-b': 'b' });
-  next();
+  return next();
 };
 
 export class TestApp extends BaseApp {
