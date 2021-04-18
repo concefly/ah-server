@@ -1,0 +1,25 @@
+{
+  "name": "ah-api-doc",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "ci": "ah-workflow ci",
+    "build": "ah-workflow build",
+    "prepublishOnly": "npm run ci && npm run build"
+  },
+  "peerDependencies": {
+    "ah-server": ">3.2.4"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.168",
+    "ah-server": "^3.2.4",
+    "ah-workflow": "^1.0.6",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "ah-api-generator": "^2.1.1",
+    "lodash": "^4.17.21"
+  }
+}

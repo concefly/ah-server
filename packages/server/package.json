@@ -9,7 +9,8 @@
     "dev": "nodemon -e ts --watch src --watch __test__ __test__/run.ts",
     "ci": "ah-workflow ci",
     "build": "ah-workflow build",
-    "release": "npm run ci && npm run build && release-it"
+    "pure-build": "tsc -p tsconfig.build.json --outDir dist",
+    "prepublish": "npm run ci && npm run build"
   },
   "dependencies": {
     "@types/koa": "^2.11.6",

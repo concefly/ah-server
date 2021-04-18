@@ -5,14 +5,15 @@ import * as koaBody from 'koa-body';
 import * as urllib from 'urllib';
 import { Logger } from 'ah-logger';
 import { BaseScheduler } from './Scheduler';
-import { IConfig, IContext, IService } from '.';
+import { IConfig, IContext, IMiddleware, IService } from '.';
 import { ErrorTypeEnum } from './error';
 import { pick, validate } from './util';
-import { BaseController, IMiddleware } from './Controller';
+import { BaseController } from './Controller';
 import * as http from 'http';
 import * as https from 'https';
 import { CloseEvt, ReadyEvt } from './Event';
 import * as fs from 'fs';
+import { BaseExtension } from './Extension';
 
 declare module '.' {
   interface IApplication extends BaseApp {}
@@ -27,6 +28,8 @@ declare module '.' {
 export abstract class BaseApp extends Koa {
   /** @deprecated use `middlewares` instead */
   middleware: never;
+  /** @deprecated use `extend` instead */
+  use: never;
 
   constructor(readonly config: IConfig) {
     super();
@@ -36,6 +39,8 @@ export abstract class BaseApp extends Koa {
   abstract controllers: BaseController[] = [];
   middlewares: IMiddleware[] = [];
   abstract schedulers: BaseScheduler[] = [];
+
+  extensions: BaseExtension[] = [];
 
   logger = new Logger('APP');
 
@@ -59,7 +64,7 @@ export abstract class BaseApp extends Koa {
   }
 
   private async initController() {
-    this.use(koaBody());
+    (this.use as any)(koaBody());
 
     // 构造 router
     const router = new Router<any, IContext>();
@@ -114,8 +119,8 @@ export abstract class BaseApp extends Koa {
       });
     });
 
-    this.use(router.routes());
-    this.use(router.allowedMethods());
+    (this.use as any)(router.routes());
+    (this.use as any)(router.allowedMethods());
   }
 
   /** 启动定时调度 */
@@ -167,11 +172,19 @@ export abstract class BaseApp extends Koa {
     this.logger.info(`start scheduler: ${list.map(s => s.name)}`);
   }
 
+  private async initExtension() {
+    this.extensions.forEach(ext => {
+      const services = ext.getService(this);
+      Object.assign(this.service, services);
+    });
+  }
+
   async start() {
     this.logger.info(this.config.sequelize());
 
     await this.initCommon();
     await this.initController();
+    await this.initExtension();
 
     const port = this.config.LOCAL_PORT;
     const callback = this.callback();
