@@ -74,8 +74,8 @@ export abstract class BaseApp extends Koa {
         const middlewares = [
           ...this.middlewares,
           ...(m.middlewares || []),
-          (ctx: IContext, next: any) => {
-            const handler = async () => {
+          async (ctx: IContext) => {
+            try {
               const q = m.query
                 ? ctx.validate<any>(
                     {
@@ -93,21 +93,17 @@ export abstract class BaseApp extends Koa {
                 ctx.set('content-type', 'application/json');
                 ctx.body = { ...(ctx.body as any), data };
               }
-            };
+            } catch (err) {
+              // 自定义异常
+              if (Object.values(ErrorTypeEnum).includes(err.type)) {
+                ctx.status = err.status;
+                ctx.body = pick(err, ['message', 'type', 'code', 'status']);
+                return;
+              }
 
-            handler()
-              .then(() => next())
-              .catch(err => {
-                // 自定义异常
-                if (Object.values(ErrorTypeEnum).includes(err.type)) {
-                  ctx.status = err.status;
-                  ctx.body = pick(err, ['message', 'type', 'code', 'status']);
-                  return;
-                }
-
-                // 其他异常外抛
-                throw err;
-              });
+              // 其他异常外抛
+              throw err;
+            }
           },
         ];
 

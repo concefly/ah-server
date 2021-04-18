@@ -3,7 +3,7 @@ import { IContext } from '.';
 import { BaseService } from './Service';
 
 export type IRouterMethod = 'GET' | 'POST' | 'DELETE' | 'PUT';
-export type IMiddleware = (ctx: IContext, next: () => Promise<any>) => void;
+export type IMiddleware = (ctx: IContext, next: () => Promise<any>) => Promise<any>;
 
 export type IControllerMapperItem = {
   path: string;

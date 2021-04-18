@@ -31,6 +31,7 @@ class EchoController extends BaseController {
 
   async echo(_ctx: IContext, q: { text?: string }) {
     const output = (this.service as any).echo.echo(q.text);
+    await new Promise(resolve => setTimeout(resolve, 500));
     return output;
   }
 }
@@ -49,12 +50,12 @@ class HomeController extends BaseController {
   }
 }
 
-const testMiddlewareA: IMiddleware = (ctx, next) => {
+const testMiddlewareA: IMiddleware = async (ctx, next) => {
   ctx.response.set({ 'x-a': 'a' });
   next();
 };
 
-const testMiddlewareB: IMiddleware = (ctx, next) => {
+const testMiddlewareB: IMiddleware = async (ctx, next) => {
   ctx.response.set({ 'x-b': 'b' });
   next();
 };
