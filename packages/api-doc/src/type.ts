@@ -2,7 +2,7 @@ import { ApiDocService } from './service';
 
 declare module 'ah-server' {
   interface IService {
-    apiDoc: ApiDocService;
+    apiDoc?: ApiDocService;
   }
 
   interface IRouterMeta {
