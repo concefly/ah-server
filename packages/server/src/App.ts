@@ -61,6 +61,8 @@ export abstract class BaseApp extends Koa {
 
       this.logger.error(msg);
     });
+
+    this.middlewares.forEach(m => (this.use as any)(m));
   }
 
   private async initController() {
@@ -76,38 +78,43 @@ export abstract class BaseApp extends Koa {
 
         const name = [ctrlIns.name, m.handler.name].join('.');
         const methods = Array.isArray(m.method) ? m.method : [m.method];
+
+        const wrapperMid: IMiddleware = async (ctx, next) => {
+          try {
+            return await next();
+          } catch (err) {
+            // 自定义异常
+            if (Object.values(ErrorTypeEnum).includes(err.type)) {
+              ctx.status = err.status;
+              ctx.body = pick(err, ['message', 'type', 'code', 'status']);
+              return;
+            }
+
+            // 其他异常外抛
+            throw err;
+          }
+        };
+
         const middlewares = [
-          ...this.middlewares,
+          wrapperMid,
           ...(m.middlewares || []),
           async (ctx: IContext) => {
-            try {
-              const q = m.query
-                ? ctx.validate<any>(
-                    {
-                      ...ctx.params,
-                      ...ctx.request.query,
-                      ...ctx.request.body,
-                    },
-                    m.query.schema
-                  )
-                : undefined;
+            const q = m.query
+              ? ctx.validate<any>(
+                  {
+                    ...ctx.params,
+                    ...ctx.request.query,
+                    ...ctx.request.body,
+                  },
+                  m.query.schema
+                )
+              : undefined;
 
-              const data = await m.handler.call(ctrlIns, ctx, q);
+            const data = await m.handler.call(ctrlIns, ctx, q);
 
-              if (data) {
-                ctx.set('content-type', 'application/json');
-                ctx.body = { ...(ctx.body as any), data };
-              }
-            } catch (err) {
-              // 自定义异常
-              if (Object.values(ErrorTypeEnum).includes(err.type)) {
-                ctx.status = err.status;
-                ctx.body = pick(err, ['message', 'type', 'code', 'status']);
-                return;
-              }
-
-              // 其他异常外抛
-              throw err;
+            if (data) {
+              ctx.set('content-type', 'application/json');
+              ctx.body = { ...(ctx.body as any), data };
             }
           },
         ];
