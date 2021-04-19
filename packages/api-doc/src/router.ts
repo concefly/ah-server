@@ -41,8 +41,10 @@ export function setInDeep(
   return _set(data);
 }
 
+export type IRouterMetaExt = IRouterMeta & { controllerName: string };
+
 export function generateRouterMetaInfo(
-  list: IRouterMeta[],
+  list: IRouterMetaExt[],
   opt: {
     version: string;
     services: { url: string }[];
@@ -69,6 +71,7 @@ export function generateRouterMetaInfo(
     methods.forEach(method => {
       // 遍历路由 path
       _.set(apiDoc, ['paths', m.path, method.toLowerCase()], {
+        operationId: [m.controllerName, m.handler.name].join('.'),
         tags: m.tags,
         summary: m.description || `${m.method} ${m.path}`,
 
