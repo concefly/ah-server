@@ -100,7 +100,7 @@ export function generateRouterMetaInfo(
             description: 'ok',
             content: {
               'application/json': {
-                schema: data2Schema((m.response?.examples || [])[0]?.data),
+                schema: data2Schema({ data: (m.response?.examples || [])[0]?.data }),
                 examples: m.response?.examples?.reduce(
                   (re, cur) => ({
                     ...re,
