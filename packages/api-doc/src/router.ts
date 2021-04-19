@@ -71,7 +71,7 @@ export function generateRouterMetaInfo(
     methods.forEach(method => {
       // 遍历路由 path
       _.set(apiDoc, ['paths', m.path, method.toLowerCase()], {
-        operationId: [m.controllerName, m.handler.name].join('.'),
+        operationId: [m.controllerName.replace(/controller/i, ''), m.handler.name].join('.'),
         tags: m.tags,
         summary: m.description || `${m.method} ${m.path}`,
 
