@@ -2,6 +2,8 @@ import { HttpClientResponse } from 'urllib';
 import { BaseConfig, pick } from '../src';
 import { TestApp } from './DemoApp';
 
+const port = 20000;
+
 function inspectResp(resp: HttpClientResponse<any>) {
   return pick(resp, ['data', 'status']);
 }
@@ -14,12 +16,12 @@ describe('App', () => {
   afterAll(() => app.stop());
 
   it('curl', async () => {
-    const r1 = await app.curl<any>('http://localhost:10001/echo?text=hi', { dataType: 'json' });
+    const r1 = await app.curl<any>(`http://localhost:${port}/echo?text=hi`, { dataType: 'json' });
     expect(inspectResp(r1)).toMatchSnapshot();
   });
 
   it('post body', async () => {
-    const r2 = await app.curl<any>('http://localhost:10001/echo', {
+    const r2 = await app.curl<any>(`http://localhost:${port}/echo`, {
       method: 'POST',
       contentType: 'json',
       dataType: 'json',
@@ -31,12 +33,12 @@ describe('App', () => {
   });
 
   it('validate 400', async () => {
-    const r3 = await app.curl<any>('http://localhost:10001/echo?text=100', { dataType: 'json' });
+    const r3 = await app.curl<any>(`http://localhost:${port}/echo?text=100`, { dataType: 'json' });
     expect(inspectResp(r3)).toMatchSnapshot();
   });
 
   it('middleware', async () => {
-    const r = await app.curl<any>('http://localhost:10001/echo?text=hi', { dataType: 'json' });
+    const r = await app.curl<any>(`http://localhost:${port}/echo?text=hi`, { dataType: 'json' });
     expect(r.headers['x-a']).toEqual('a');
     expect(r.headers['x-b']).toEqual('b');
   });
