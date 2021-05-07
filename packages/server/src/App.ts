@@ -182,17 +182,20 @@ export abstract class BaseApp extends Koa {
 
   private async initExtension() {
     this.extensions.forEach(ext => {
-      const services = ext.getService(this);
-      Object.assign(this.service, services);
+      // service
+      Object.assign(this.service, ext.getService(this));
+
+      // middleware
+      ext.getMiddleware().forEach(mid => this.middlewares.push(mid));
     });
   }
 
   async start() {
     this.logger.info(this.config.sequelize());
 
+    await this.initExtension();
     await this.initCommon();
     await this.initController();
-    await this.initExtension();
 
     const port = this.config.LOCAL_PORT;
     const callback = this.callback();
