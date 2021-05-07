@@ -105,7 +105,7 @@ export abstract class BaseApp extends Koa {
                     ...ctx.params,
                     ...ctx.request.query,
                     ...ctx.request.body,
-                    ...ctx.request.files
+                    ...ctx.request.files,
                   },
                   m.query.schema
                 )
