@@ -66,7 +66,7 @@ export abstract class BaseApp extends Koa {
   }
 
   private async initController() {
-    (this.use as any)(koaBody());
+    (this.use as any)(koaBody({ multipart: true }));
 
     // 构造 router
     const router = new Router<any, IContext>();
@@ -105,6 +105,7 @@ export abstract class BaseApp extends Koa {
                     ...ctx.params,
                     ...ctx.request.query,
                     ...ctx.request.body,
+                    ...ctx.request.files
                   },
                   m.query.schema
                 )

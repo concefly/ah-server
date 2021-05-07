@@ -2,20 +2,20 @@ import {
   BaseApp,
   BaseController,
   IContext,
-  IControllerMapperItem,
+  IRouterMeta,
   IService,
   BaseService,
   IMiddleware,
 } from '../src';
 
-class EchoService extends BaseService {
+class InspectService extends BaseService {
   echo(text: string) {
     return text;
   }
 }
 
 class EchoController extends BaseController {
-  mapper: IControllerMapperItem[] = [
+  mapper: IRouterMeta[] = [
     {
       path: '/echo',
       method: ['GET', 'POST'],
@@ -30,23 +30,46 @@ class EchoController extends BaseController {
   ];
 
   async echo(_ctx: IContext, q: { text?: string }) {
-    const output = (this.service as any).echo.echo(q.text);
+    const output = (this.service as any).inspect.echo(q.text);
     await new Promise(resolve => setTimeout(resolve, 500));
     return output;
   }
 }
 
 class HomeController extends BaseController {
-  mapper: IControllerMapperItem[] = [
+  mapper: IRouterMeta[] = [
     {
       path: '/',
       method: ['GET'],
       handler: this.index,
     },
+    {
+      path: '/file',
+      method: ['POST'],
+      handler: this.uploadFile,
+      query: {
+        schema: {
+          type: 'object',
+          properties: {
+            a: { type: 'string' },
+            file: {
+              type: 'object',
+              properties: { path: { type: 'string' } },
+              required: ['path'],
+            },
+          },
+          required: ['a'],
+        },
+      },
+    },
   ];
 
   async index(ctx: IContext) {
     ctx.body = '<h1>Hi</h1>';
+  }
+
+  async uploadFile(_ctx: IContext, q: { a: string; file: { path: string } }) {
+    return q;
   }
 }
 
@@ -62,7 +85,7 @@ const testMiddlewareB: IMiddleware = async (ctx, next) => {
 
 export class TestApp extends BaseApp {
   service: IService = {
-    echo: new EchoService(this),
+    inspect: new InspectService(this),
   };
   controllers: BaseController[] = [new HomeController(this), new EchoController(this)];
   schedulers = [];

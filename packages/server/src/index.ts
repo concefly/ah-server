@@ -1,4 +1,7 @@
+// for type
 import * as Koa from 'koa';
+import 'koa-body';
+
 import { Schema } from 'jsonschema';
 
 export interface IApplication {}
@@ -21,12 +24,12 @@ export interface IConfig {
 }
 
 // fix koa plugin type
-declare module 'koa' {
-  interface Request {
-    // koaBody type
-    body?: any;
-  }
-}
+// declare module 'koa' {
+//   interface Request {
+//     // koaBody type
+//     body?: any;
+//   }
+// }
 
 export * from './App';
 export * from './Config';

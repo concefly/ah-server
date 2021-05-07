@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "LOCAL_PORT=20000 nodemon -e ts --watch src --watch __test__ __test__/run.ts",
     "ci": "LOCAL_PORT=20000 ah-workflow ci",
+    "test": "LOCAL_PORT=20000 ah-workflow test",
     "build": "ah-workflow build",
     "pure-build": "tsc -p tsconfig.build.json --outDir dist",
     "prepublish": "npm run ci && npm run build"

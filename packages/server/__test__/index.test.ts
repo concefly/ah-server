@@ -42,4 +42,14 @@ describe('App', () => {
     expect(r.headers['x-a']).toEqual('a');
     expect(r.headers['x-b']).toEqual('b');
   });
+
+  it('upload file', async () => {
+    const r = await app.curl<any>(`http://localhost:${port}/file`, {
+      dataType: 'json',
+      data: { a: 'a' },
+      files: [Buffer.from('x')],
+    });
+    expect(r.data.data.a).toBeTruthy();
+    expect(r.data.data.file.path).toBeTruthy();
+  });
 });
