@@ -1,4 +1,4 @@
-import { IRouterMeta } from 'ah-server';
+import { BaseController, IRouterMeta } from 'ah-server';
 import * as _ from 'lodash';
 import { data2Schema } from 'ah-api-generator/dist/util';
 
@@ -41,7 +41,7 @@ export function setInDeep(
   return _set(data);
 }
 
-export type IRouterMetaExt = IRouterMeta & { controllerName: string };
+export type IRouterMetaExt = IRouterMeta & { controller: BaseController; handlerName: string };
 
 export function generateRouterMetaInfo(
   list: IRouterMetaExt[],
@@ -71,7 +71,7 @@ export function generateRouterMetaInfo(
     methods.forEach(method => {
       // 遍历路由 path
       _.set(apiDoc, ['paths', m.path, method.toLowerCase()], {
-        operationId: [m.controllerName.replace(/controller/i, ''), m.handler.name].join('.'),
+        operationId: [m.controller.name.replace(/controller/i, ''), m.handlerName].join('.'),
         tags: m.tags,
         summary: m.description || `${m.method} ${m.path}`,
 

@@ -1,4 +1,4 @@
-import { BaseService } from 'ah-server';
+import { BaseService, getOwnPropertyEntries, getRouterMeta } from 'ah-server';
 import { generateRouterMetaInfo, IRouterMetaExt } from './router';
 import * as _ from 'lodash';
 
@@ -7,8 +7,11 @@ export class ApiDocService extends BaseService {
     const list: IRouterMetaExt[] = [];
 
     this.app.controllers.forEach(c => {
-      c.mapper.forEach(m => {
-        list.push({ ...m, controllerName: c.name });
+      getOwnPropertyEntries(c).forEach(([pName]) => {
+        const rMeta = getRouterMeta(c, pName);
+        if (!rMeta) return;
+
+        list.push({ ...rMeta, controller: c, handlerName: pName });
       });
     });
 

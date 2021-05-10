@@ -7,13 +7,14 @@ import { Logger } from 'ah-logger';
 import { BaseScheduler } from './Scheduler';
 import { IConfig, IContext, IMiddleware, IService } from '.';
 import { ErrorTypeEnum } from './error';
-import { pick, validate } from './util';
+import { getOwnPropertyEntries, pick, validate } from './util';
 import { BaseController } from './Controller';
 import * as http from 'http';
 import * as https from 'https';
 import { CloseEvt, ReadyEvt } from './Event';
 import * as fs from 'fs';
 import { BaseExtension } from './Extension';
+import { getRouterMeta } from './refactor';
 
 declare module '.' {
   interface IApplication extends BaseApp {}
@@ -70,14 +71,20 @@ export abstract class BaseApp extends Koa {
 
     // 构造 router
     const router = new Router<any, IContext>();
+
     this.controllers.forEach(ctrlIns => {
-      ctrlIns.mapper.forEach(m => {
+      getOwnPropertyEntries(ctrlIns).forEach(([pName, handler]) => {
+        if (typeof handler !== 'function') return;
+
+        const rMeta = getRouterMeta(ctrlIns, pName);
+        if (!rMeta) return;
+
         this.logger.info(
-          `register controller: ${m.method} ${m.path} -> ${ctrlIns.name}.${m.handler.name}`
+          `register controller: ${rMeta.method} ${rMeta.path} -> ${ctrlIns.name}.${handler.name}`
         );
 
-        const name = [ctrlIns.name, m.handler.name].join('.');
-        const methods = Array.isArray(m.method) ? m.method : [m.method];
+        const name = [ctrlIns.name, handler.name].join('.');
+        const methods = Array.isArray(rMeta.method) ? rMeta.method : [rMeta.method];
 
         const wrapperMid: IMiddleware = async (ctx, next) => {
           try {
@@ -97,9 +104,9 @@ export abstract class BaseApp extends Koa {
 
         const middlewares = [
           wrapperMid,
-          ...(m.middlewares || []),
+          ...(rMeta.middlewares || []),
           async (ctx: IContext) => {
-            const q = m.query
+            const q = rMeta.query
               ? ctx.validate<any>(
                   {
                     ...ctx.params,
@@ -107,11 +114,11 @@ export abstract class BaseApp extends Koa {
                     ...ctx.request.body,
                     ...ctx.request.files,
                   },
-                  m.query.schema
+                  rMeta.query.schema
                 )
               : undefined;
 
-            const data = await m.handler.call(ctrlIns, ctx, q);
+            const data = await handler.call(ctrlIns, ctx, q);
 
             if (data) {
               ctx.set('content-type', 'application/json');
@@ -120,10 +127,10 @@ export abstract class BaseApp extends Koa {
           },
         ];
 
-        if (methods.includes('GET')) router.get(name, m.path, ...middlewares);
-        if (methods.includes('POST')) router.post(name, m.path, ...middlewares);
-        if (methods.includes('PUT')) router.put(name, m.path, ...middlewares);
-        if (methods.includes('DELETE')) router.delete(name, m.path, ...middlewares);
+        if (methods.includes('GET')) router.get(name, rMeta.path, ...middlewares);
+        if (methods.includes('POST')) router.post(name, rMeta.path, ...middlewares);
+        if (methods.includes('PUT')) router.put(name, rMeta.path, ...middlewares);
+        if (methods.includes('DELETE')) router.delete(name, rMeta.path, ...middlewares);
       });
     });
 

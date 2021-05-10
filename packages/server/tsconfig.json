@@ -6,7 +6,9 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "declaration": true,
-    "importHelpers": true
+    "importHelpers": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
   },
   "include": ["src", "__test__"]
 }

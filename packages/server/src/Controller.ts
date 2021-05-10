@@ -5,5 +5,6 @@ import { BaseService } from './Service';
 export type IControllerMapperItem = IRouterMeta;
 
 export abstract class BaseController extends BaseService {
-  abstract readonly mapper: IRouterMeta[];
+  /** @deprecated 改用 router 装饰器 */
+  readonly mapper?: IRouterMeta[];
 }

@@ -1,3 +1,5 @@
+import 'reflect-metadata';
+
 // for type
 import * as Koa from 'koa';
 import 'koa-body';
@@ -14,7 +16,7 @@ export type IMiddleware = (ctx: IContext, next: () => Promise<any>) => Promise<a
 export interface IRouterMeta {
   path: string;
   method: IRouterMethod | IRouterMethod[];
-  handler: (ctx: IContext, query?: any) => Promise<any>;
+  // handler: (ctx: IContext, query?: any) => Promise<any>;
   middlewares?: IMiddleware[];
   query?: { schema: Schema };
 }
@@ -22,14 +24,6 @@ export interface IRouterMeta {
 export interface IConfig {
   LOCAL_PORT: number;
 }
-
-// fix koa plugin type
-// declare module 'koa' {
-//   interface Request {
-//     // koaBody type
-//     body?: any;
-//   }
-// }
 
 export * from './App';
 export * from './Config';
@@ -40,3 +34,4 @@ export * from './Scheduler';
 export * from './error';
 export * from './Event';
 export * from './Extension';
+export * from './refactor';

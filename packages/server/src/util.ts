@@ -1,9 +1,8 @@
 import { Schema, validate as jsonschemaValidate } from 'jsonschema';
-import { Context } from 'koa';
 import { createBizError } from './error';
 
 /** jsonschema 校验 */
-export function validate<T>(this: Context, data: any, schema: Schema): T {
+export function validate<T>(data: any, schema: Schema): T {
   const result = jsonschemaValidate(data, schema, {
     allowUnknownAttributes: false,
     rewrite: (_ins: any, _sch: Schema) => {
@@ -52,4 +51,20 @@ export function tryParseIntProperty(data: any) {
     const n = +d;
     return isNaN(n) ? d : n;
   });
+}
+
+export function getOwnPropertyEntries(target: any) {
+  // 只收集 target 自己的属性。继承属性不处理
+  // FIXME: 不用 for ... in 语法，因为 es6 class 下遍历不了原型链上的方法
+  // @see https://stackoverflow.com/questions/30881632/es6-iterate-over-class-methods
+  const keys = [
+    // 自身属性
+    ...Object.getOwnPropertyNames(target),
+    // 原型链上所有属性(method 默认不可枚举，所以要用 getOwnPropertyNames)
+    ...Object.getOwnPropertyNames(Object.getPrototypeOf(target)),
+  ];
+
+  const list = keys.map(k => [k, target[k]]);
+
+  return list;
 }
