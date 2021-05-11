@@ -246,4 +246,10 @@ export abstract class BaseApp extends Koa {
       });
     }).finally(() => this.emit(CloseEvt));
   }
+
+  runInBackground(callback: () => Promise<any>) {
+    callback().catch(err => {
+      this.logger.error(err);
+    });
+  }
 }
