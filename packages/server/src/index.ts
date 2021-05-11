@@ -16,9 +16,11 @@ export type IMiddleware = (ctx: IContext, next: () => Promise<any>) => Promise<a
 export interface IRouterMeta {
   path: string;
   method: IRouterMethod | IRouterMethod[];
-  // handler: (ctx: IContext, query?: any) => Promise<any>;
   middlewares?: IMiddleware[];
-  query?: { schema: Schema };
+  query?: {
+    tap?: ((q: any) => any) | 'tryParseIntProperty';
+    schema: Schema;
+  };
 }
 
 export interface IConfig {

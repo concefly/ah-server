@@ -7,7 +7,7 @@ import { Logger } from 'ah-logger';
 import { BaseScheduler } from './Scheduler';
 import { IConfig, IContext, IMiddleware, IService } from '.';
 import { ErrorTypeEnum } from './error';
-import { getOwnPropertyEntries, pick, validate } from './util';
+import { getOwnPropertyEntries, pick, tryParseIntProperty, validate } from './util';
 import { BaseController } from './Controller';
 import * as http from 'http';
 import * as https from 'https';
@@ -106,17 +106,23 @@ export abstract class BaseApp extends Koa {
           wrapperMid,
           ...(rMeta.middlewares || []),
           async (ctx: IContext) => {
-            const q = rMeta.query
-              ? ctx.validate<any>(
-                  {
-                    ...ctx.params,
-                    ...ctx.request.query,
-                    ...ctx.request.body,
-                    ...ctx.request.files,
-                  },
-                  rMeta.query.schema
-                )
-              : undefined;
+            let q: any;
+
+            if (rMeta.query) {
+              q = {
+                ...ctx.params,
+                ...ctx.request.query,
+                ...ctx.request.body,
+                ...ctx.request.files,
+              };
+
+              if (rMeta.query.tap) {
+                if (typeof rMeta.query.tap === 'function') q = rMeta.query.tap(q);
+                else if (rMeta.query.tap === 'tryParseIntProperty') q = tryParseIntProperty(q);
+              }
+
+              q = ctx.validate<any>(q, rMeta.query.schema);
+            }
 
             const data = await handler.call(ctrlIns, ctx, q);
 

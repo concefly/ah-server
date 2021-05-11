@@ -59,6 +59,25 @@ class HomeController extends BaseController {
   async uploadFile(_ctx: IContext, q: { a: string; file: { path: string } }) {
     return q;
   }
+
+  @router({
+    path: '/queryTap',
+    method: ['GET'],
+    query: {
+      tap: 'tryParseIntProperty',
+      schema: {
+        type: 'object',
+        properties: {
+          title: { type: 'string' },
+          pageNum: { type: 'integer' },
+        },
+        required: ['title', 'pageNum'],
+      },
+    },
+  })
+  async queryTap(_ctx: IContext, q: { pageNum: number; title: string }) {
+    return q;
+  }
 }
 
 const testMiddlewareA: IMiddleware = async (ctx, next) => {

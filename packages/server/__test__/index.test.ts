@@ -52,4 +52,13 @@ describe('App', () => {
     expect(r.data.data.a).toBeTruthy();
     expect(r.data.data.file.path).toBeTruthy();
   });
+
+  it('query tap', async () => {
+    const r = await app.curl<any>(`http://localhost:${port}/queryTap`, {
+      dataAsQueryString: true,
+      data: { pageNum: 1, title: 'aaa' },
+      dataType: 'json',
+    });
+    expect(r.data.data).toEqual({ pageNum: 1, title: 'aaa' });
+  });
 });
