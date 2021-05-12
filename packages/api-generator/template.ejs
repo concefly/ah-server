@@ -1,11 +1,22 @@
 import { BaseService } from './BaseService';
 
+/** interfaces */
 <% for (const [sName, rMap] of Object.entries(serviceMap)) { %>
 <% for (const [rName, rMeta] of Object.entries(rMap)) { %>
 export type I<%= sName %>Service_<%= rName %>_Query = <% if (rMeta.query && rMeta.query.tsTypeLiteral) { %><%- rMeta.query.tsTypeLiteral %><% } else { %>any<% } %>;
 export type I<%= sName %>Service_<%= rName %>_Resp = <% if (rMeta.response && rMeta.response.tsTypeLiteral) { %><%- rMeta.response.tsTypeLiteral %><%} else { %>any<% } %>;
 <% } %>
 <% } %>
+
+/** schemas */
+export const ServiceSchemas = {
+  <% for (const [sName, rMap] of Object.entries(serviceMap)) { %>
+  <% for (const [rName, rMeta] of Object.entries(rMap)) { %>
+  <%= sName %>Service_<%= rName %>_Query: <% if (rMeta.query && rMeta.query.schema) { %><%- JSON.stringify(rMeta.query.schema) %><% } else { %>{}<% } %>,
+  <%= sName %>Service_<%= rName %>_Resp: <% if (rMeta.response && rMeta.response.schema) { %><%- JSON.stringify(rMeta.response.schema) %><% } else { %>{}<% } %>,
+  <% } %>
+  <% } %>
+}
 
 <% for (const [sName, rMap] of Object.entries(serviceMap)) { %>
 export class <%= sName %>Service extends BaseService {
@@ -48,7 +59,7 @@ export const createAllService = (tap?: (s: BaseService) => void) => {
   };
 
   // tap
-  Object.values(result).forEach(s => tap?.(s));
+  if (tap) Object.values(result).forEach(s => tap(s));
 
   return result;
 };

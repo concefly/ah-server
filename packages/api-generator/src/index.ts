@@ -7,6 +7,8 @@ import { OpenAPIV3 as API } from 'openapi-types';
 import prettier from 'prettier';
 import RefParser from '@apidevtools/json-schema-ref-parser';
 
+export * from './util';
+
 export interface IConfig {
   input?: { type: 'local'; filename: string } | { type: 'remote'; url: string; headers?: any };
   operationIdSplitter?: string;
