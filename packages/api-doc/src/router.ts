@@ -1,6 +1,7 @@
 import { BaseController, IRouterMeta } from 'ah-server';
 import * as _ from 'lodash';
 import { data2Schema } from 'ah-api-generator';
+import { Schema } from 'jsonschema';
 
 export function setInDeep(
   data: any,
@@ -48,12 +49,14 @@ export function generateRouterMetaInfo(
   opt: {
     version: string;
     services: { url: string }[];
+    components?: { [name: string]: Schema };
   }
 ) {
   const apiDoc: any = {
     openapi: '3.0.1',
     info: { version: opt.version },
     servers: opt.services,
+    components: opt.components,
   };
 
   // 生成 open api 文档
