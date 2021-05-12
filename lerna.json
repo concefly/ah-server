@@ -1,5 +1,5 @@
 {
-  "packages": ["packages/*"],
+  "packages": ["packages/api-doc", "packages/api-generator", "packages/server", "packages/static"],
   "version": "independent",
   "npmClient": "cnpm"
 }

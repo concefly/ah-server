@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "ah-api-generator": "^2.1.1",
+    "jsonschema": "^1.4.0",
     "lodash": "^4.17.21"
   }
 }

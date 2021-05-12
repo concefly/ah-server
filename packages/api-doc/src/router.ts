@@ -1,6 +1,6 @@
 import { BaseController, IRouterMeta } from 'ah-server';
 import * as _ from 'lodash';
-import { data2Schema } from 'ah-api-generator/dist/util';
+import { data2Schema } from 'ah-api-generator';
 
 export function setInDeep(
   data: any,
@@ -103,7 +103,9 @@ export function generateRouterMetaInfo(
             description: 'ok',
             content: {
               'application/json': {
-                schema: data2Schema({ data: (m.response?.examples || [])[0]?.data }),
+                schema:
+                  m.response?.schema ||
+                  data2Schema({ data: (m.response?.examples || [])[0]?.data }),
                 examples: m.response?.examples?.reduce(
                   (re, cur) => ({
                     ...re,
