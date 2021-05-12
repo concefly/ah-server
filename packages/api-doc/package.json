@@ -1,6 +1,6 @@
 {
   "name": "ah-api-doc",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -20,7 +20,7 @@
     "typescript": "^4.2.4"
   },
   "dependencies": {
-    "ah-api-generator": "^2.1.4",
+    "ah-api-generator": "^2.1.5",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.21"
   },
