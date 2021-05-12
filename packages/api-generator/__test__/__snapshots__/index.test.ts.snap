@@ -4,6 +4,8 @@ exports[`generateAPIService api: api 1`] = `
 "//banner
 import { BaseService } from './BaseService';
 
+/** interfaces */
+
 export type IPageService_getList_Query = { name?: string; title?: string; summary?: string };
 export type IPageService_getList_Resp = {
   pageSize: number;
@@ -139,6 +141,243 @@ export type IUserService_addReserveRequest_Resp = any;
 
 export type IUserService_cancelReserveRequest_Query = { id: number };
 export type IUserService_cancelReserveRequest_Resp = any;
+
+/** schemas */
+export const ServiceSchemas = {
+  PageService_getList_Query: {
+    type: 'object',
+    properties: {
+      name: { type: 'string' },
+      title: { type: 'string' },
+      summary: { type: 'string' },
+    },
+  },
+  PageService_getList_Resp: {
+    type: 'object',
+    properties: {
+      pageSize: { type: 'integer' },
+      pageNum: { type: 'integer' },
+      total: { type: 'integer' },
+      list: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'integer' },
+            created_at: { type: 'string' },
+            updated_at: { type: 'string' },
+            level: { type: 'integer' },
+            a: { type: 'string' },
+            b: { type: 'boolean' },
+            c: {},
+            e: { type: 'boolean' },
+          },
+          required: ['id', 'created_at', 'updated_at', 'level', 'a', 'b', 'c', 'e'],
+        },
+      },
+    },
+    required: ['pageSize', 'pageNum', 'total', 'list'],
+  },
+
+  PageService_createOne_Query: {
+    type: 'object',
+    properties: {
+      title: { type: 'string' },
+      summary: { type: 'string' },
+      content: { type: 'string' },
+      meta: { type: 'object' },
+    },
+    required: ['title', 'summary', 'content', 'meta'],
+  },
+  PageService_createOne_Resp: {},
+
+  PageService_updateOne_Query: {
+    type: 'object',
+    properties: {
+      name: { type: 'string' },
+      title: { type: 'string' },
+      summary: { type: 'string' },
+      content: { type: 'string' },
+      meta: { type: 'object' },
+    },
+    required: ['name'],
+  },
+  PageService_updateOne_Resp: {},
+
+  PageService_removeOne_Query: { type: 'object', properties: { name: { type: 'string' } } },
+  PageService_removeOne_Resp: {},
+
+  ReserveService_getActivityList_Query: { type: 'object', properties: { id: { type: 'integer' } } },
+  ReserveService_getActivityList_Resp: {},
+
+  ReserveService_createActivity_Query: {
+    type: 'object',
+    properties: {
+      title: { type: 'string', description: '活动标题' },
+      detail: { type: 'string' },
+      meta: { type: 'object', properties: { richDetailMeta: { type: 'object' } } },
+    },
+    required: ['title'],
+  },
+  ReserveService_createActivity_Resp: {},
+
+  ReserveService_updateActivity_Query: {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      title: { type: 'string' },
+      detail: { type: 'string' },
+      meta: { type: 'object', properties: { richDetailMeta: { type: 'object' } } },
+    },
+    required: ['id'],
+  },
+  ReserveService_updateActivity_Resp: {},
+
+  ReserveService_removeActivity_Query: { type: 'object', properties: { id: { type: 'integer' } } },
+  ReserveService_removeActivity_Resp: {},
+
+  ReserveService_getCalenderList_Query: {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      activity_id: { type: 'integer' },
+      startTime: { type: 'string' },
+      endTime: { type: 'string' },
+    },
+  },
+  ReserveService_getCalenderList_Resp: {},
+
+  ReserveService_createCalender_Query: {
+    type: 'object',
+    properties: {
+      activity_id: { type: 'integer' },
+      list: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            start_time: { type: 'string' },
+            end_time: { type: 'string' },
+            location: { type: 'string' },
+            detail: { type: 'string' },
+            status: { type: 'string', enum: ['enabled', 'disabled'] },
+            meta: { type: 'object', properties: { richDetailMeta: { type: 'object' } } },
+          },
+          required: ['start_time', 'end_time'],
+        },
+        maxItems: 30,
+      },
+    },
+    required: ['activity_id', 'list'],
+  },
+  ReserveService_createCalender_Resp: {},
+
+  ReserveService_updateCalender_Query: {
+    type: 'object',
+    properties: {
+      id: { type: 'integer' },
+      start_time: { type: 'string' },
+      end_time: { type: 'string' },
+      location: { type: 'string' },
+      detail: { type: 'string' },
+      status: { type: 'string', enum: ['enabled', 'disabled'] },
+      meta: { type: 'object', properties: { richDetailMeta: { type: 'object' } } },
+    },
+    required: ['id'],
+  },
+  ReserveService_updateCalender_Resp: {},
+
+  ReserveService_getUserRequestList_Query: {
+    type: 'object',
+    properties: { calendar_id: { type: 'integer' } },
+  },
+  ReserveService_getUserRequestList_Resp: {},
+
+  ReserveService_confirmUserRequest_Query: {
+    type: 'object',
+    properties: { id: { type: 'integer' }, username: { type: 'string' } },
+    required: ['id', 'username'],
+  },
+  ReserveService_confirmUserRequest_Resp: {},
+
+  SystemService_getApiDoc_Query: {},
+  SystemService_getApiDoc_Resp: {},
+
+  SystemService_getList_Query: {},
+  SystemService_getList_Resp: {},
+
+  SystemService_updateOne_Query: {},
+  SystemService_updateOne_Resp: {},
+
+  UserService_getUserInfo_Query: {},
+  UserService_getUserInfo_Resp: {},
+
+  UserService_updateSession_Query: {},
+  UserService_updateSession_Resp: {},
+
+  UserService_getShiluRoles_Query: {},
+  UserService_getShiluRoles_Resp: {},
+
+  UserService_assignShiluRoles_Query: {
+    type: 'object',
+    properties: { roleId: { type: 'integer' } },
+    required: ['roleId'],
+  },
+  UserService_assignShiluRoles_Resp: {},
+
+  UserService_removeShiluRoles_Query: {
+    type: 'object',
+    properties: { roleId: { type: 'integer' } },
+  },
+  UserService_removeShiluRoles_Resp: {},
+
+  UserService_getEnterCode_Query: {
+    type: 'object',
+    properties: { pavilionId: { type: 'integer' } },
+  },
+  UserService_getEnterCode_Resp: {},
+
+  UserService_getLeaveInfo_Query: {
+    type: 'object',
+    properties: { pavilionId: { type: 'integer' } },
+  },
+  UserService_getLeaveInfo_Resp: {},
+
+  UserService_addReserveRequest_Query: {
+    type: 'object',
+    properties: {
+      calendar_id: { type: 'integer' },
+      type: { type: 'string', enum: ['team', 'personal'] },
+      meta: {
+        type: 'object',
+        properties: {
+          members: {
+            type: 'array',
+            items: {
+              type: 'object',
+              properties: {
+                nick: { type: 'string' },
+                gender: { type: 'string', enum: ['男', '女'] },
+                phone: { type: 'string' },
+              },
+              required: ['nick', 'gender', 'phone'],
+            },
+            maxItems: 20,
+          },
+        },
+      },
+    },
+    required: ['calendar_id', 'type'],
+  },
+  UserService_addReserveRequest_Resp: {},
+
+  UserService_cancelReserveRequest_Query: {
+    type: 'object',
+    properties: { id: { type: 'integer' } },
+    required: ['id'],
+  },
+  UserService_cancelReserveRequest_Resp: {},
+};
 
 export class PageService extends BaseService {
   /**
@@ -524,7 +763,7 @@ export const createAllService = (tap?: (s: BaseService) => void) => {
   };
 
   // tap
-  Object.values(result).forEach(s => tap?.(s));
+  if (tap) Object.values(result).forEach(s => tap(s));
 
   return result;
 };
@@ -534,6 +773,8 @@ export const createAllService = (tap?: (s: BaseService) => void) => {
 exports[`generateAPIService api2: api2 1`] = `
 "//banner
 import { BaseService } from './BaseService';
+
+/** interfaces */
 
 export type ISnapshotcontrollerService_create_Query = { device: string; timestamp: string };
 export type ISnapshotcontrollerService_create_Resp = string;
@@ -590,6 +831,131 @@ export type IDevicecontrollerService_getPage_Resp = {
   pageNum: any;
   total: any;
   list: Array<{ id: any; created_at: string; updated_at: string; name: string; title: string }>;
+};
+
+/** schemas */
+export const ServiceSchemas = {
+  SnapshotcontrollerService_create_Query: {
+    type: 'object',
+    properties: {
+      device: { type: 'string', description: '设备 name' },
+      timestamp: { type: 'string', description: '本地时间戳(ms)' },
+    },
+    required: ['device', 'timestamp'],
+  },
+  SnapshotcontrollerService_create_Resp: { type: 'string' },
+
+  FaceindexcontrollerService_getPage_Query: {},
+  FaceindexcontrollerService_getPage_Resp: {
+    type: 'object',
+    properties: {
+      pageSize: { type: 'number' },
+      pageNum: { type: 'number' },
+      total: { type: 'number' },
+      list: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'number' },
+            created_at: { type: 'string' },
+            updated_at: { type: 'string' },
+            age: { type: 'number' },
+            gender: { type: 'number' },
+            expression: { type: 'number' },
+            snapshot: {
+              type: 'object',
+              properties: {
+                id: { type: 'number' },
+                created_at: { type: 'string' },
+                updated_at: { type: 'string' },
+                ossPath: { type: 'string' },
+                faceIndexStatus: { type: 'string', enum: ['init', 'running', 'finish', 'error'] },
+                device: {
+                  type: 'object',
+                  properties: {
+                    id: { type: 'number' },
+                    created_at: { type: 'string' },
+                    updated_at: { type: 'string' },
+                    name: { type: 'string' },
+                    title: { type: 'string' },
+                  },
+                  required: ['id', 'created_at', 'updated_at', 'name', 'title'],
+                },
+              },
+              required: ['id', 'created_at', 'updated_at', 'ossPath', 'faceIndexStatus'],
+            },
+          },
+          required: ['id', 'created_at', 'updated_at', 'age', 'gender', 'expression'],
+        },
+      },
+    },
+    required: ['pageSize', 'pageNum', 'total', 'list'],
+  },
+
+  AuthcontrollerService_login_Query: {
+    type: 'object',
+    properties: { name: { type: 'string' }, password: { type: 'string' } },
+    required: ['name', 'password'],
+  },
+  AuthcontrollerService_login_Resp: {
+    type: 'object',
+    properties: {
+      accessToken: { type: 'string' },
+      user: {
+        type: 'object',
+        properties: {
+          id: { type: 'number' },
+          created_at: { type: 'string' },
+          updated_at: { type: 'string' },
+          name: { type: 'string' },
+          nick: { type: 'string' },
+          role: { type: 'string', enum: ['normal', 'admin'] },
+        },
+        required: ['id', 'created_at', 'updated_at', 'name', 'nick', 'role'],
+      },
+    },
+    required: ['accessToken', 'user'],
+  },
+
+  UsercontrollerService_getUser_Query: {},
+  UsercontrollerService_getUser_Resp: {
+    type: 'object',
+    properties: {
+      id: { type: 'number' },
+      created_at: { type: 'string' },
+      updated_at: { type: 'string' },
+      name: { type: 'string' },
+      nick: { type: 'string' },
+      role: { type: 'string', enum: ['normal', 'admin'] },
+    },
+    required: ['id', 'created_at', 'updated_at', 'name', 'nick', 'role'],
+  },
+
+  DevicecontrollerService_getPage_Query: {},
+  DevicecontrollerService_getPage_Resp: {
+    type: 'object',
+    properties: {
+      pageSize: { type: 'number' },
+      pageNum: { type: 'number' },
+      total: { type: 'number' },
+      list: {
+        type: 'array',
+        items: {
+          type: 'object',
+          properties: {
+            id: { type: 'number' },
+            created_at: { type: 'string' },
+            updated_at: { type: 'string' },
+            name: { type: 'string' },
+            title: { type: 'string' },
+          },
+          required: ['id', 'created_at', 'updated_at', 'name', 'title'],
+        },
+      },
+    },
+    required: ['pageSize', 'pageNum', 'total', 'list'],
+  },
 };
 
 export class SnapshotcontrollerService extends BaseService {
@@ -692,7 +1058,7 @@ export const createAllService = (tap?: (s: BaseService) => void) => {
   };
 
   // tap
-  Object.values(result).forEach(s => tap?.(s));
+  if (tap) Object.values(result).forEach(s => tap(s));
 
   return result;
 };
