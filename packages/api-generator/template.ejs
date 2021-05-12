@@ -42,9 +42,9 @@ export class <%= sName %>Service extends BaseService {
 export function replaceUrlParams(url: string, data?: any) {
   if (!data) return url;
 
-  const match = url.match(/\\:\\w+/g);
+  const match = url.match(/\:\w+/g);
   if (match) {
-    const pnSet = new Set(match.map(p => p.replace(/^\\:/, '')));
+    const pnSet = new Set(match.map(p => p.replace(/^\:/, '')));
     pnSet.forEach(p => {
       url = url.replace(new RegExp(`\:${p}`, 'g'), data[p]);
     });
