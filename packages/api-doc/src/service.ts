@@ -1,12 +1,10 @@
-import { BaseService, getOwnPropertyEntries, getRouterMeta, IApplication } from 'ah-server';
+import { BaseService, getOwnPropertyEntries, getRouterMeta } from 'ah-server';
 import { generateRouterMetaInfo, IRouterMetaExt } from './router';
 import * as _ from 'lodash';
 import { Schema } from 'jsonschema';
 
 export class ApiDocService extends BaseService {
-  constructor(app: IApplication, private components?: { [name: string]: Schema }) {
-    super(app);
-  }
+  components?: { [name: string]: Schema };
 
   getApiDoc(opt: { version: string; services: { url: string }[] }) {
     const list: IRouterMetaExt[] = [];

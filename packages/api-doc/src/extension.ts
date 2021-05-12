@@ -8,8 +8,9 @@ export class ApiDocExtension extends BaseExtension {
   }
 
   getService(app: IApplication) {
-    return {
-      apiDoc: new ApiDocService(app, this.components),
-    };
+    const apiDoc = new ApiDocService(app);
+    apiDoc.components = this.components;
+
+    return { apiDoc };
   }
 }
