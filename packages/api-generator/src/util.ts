@@ -81,6 +81,12 @@ export type IRequestMeta = {
   pathName: string;
   method: string;
   description?: string;
+  tags?: string[];
+  apiDoc?:
+    | API.PathItemObject['get']
+    | API.PathItemObject['put']
+    | API.PathItemObject['post']
+    | API.PathItemObject['delete'];
 };
 
 export interface IServiceMap {
@@ -123,6 +129,8 @@ export function renderService(apiDoc: API.Document, opt: { operationIdSplitter?:
         method,
         pathName,
         description: commonPiData.description,
+        tags: commonPiData.tags,
+        apiDoc: commonPiData,
       };
 
       //

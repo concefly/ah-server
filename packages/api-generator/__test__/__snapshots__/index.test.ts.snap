@@ -387,9 +387,27 @@ export class PageService extends BaseService {
    * - pathName: /page
    * - method: GET
    */
-  public getList = async (query: IPageService_getList_Query) => {
-    return this.request<IPageService_getList_Resp>(replaceUrlParams('/page', query), 'GET', query);
-  };
+  public getList = createMethod(
+    async (query: IPageService_getList_Query) => {
+      return this.request<IPageService_getList_Resp>(
+        replaceUrlParams('/page', query),
+        'GET',
+        query
+      );
+    },
+    {
+      tags: ['page', 'toC'],
+      pathName: '/page',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.PageService_getList_Query,
+      },
+      response: {
+        schema: ServiceSchemas.PageService_getList_Resp,
+      },
+    }
+  );
 
   /**
    * PageService.createOne
@@ -398,13 +416,27 @@ export class PageService extends BaseService {
    * - pathName: /page
    * - method: POST
    */
-  public createOne = async (query: IPageService_createOne_Query) => {
-    return this.request<IPageService_createOne_Resp>(
-      replaceUrlParams('/page', query),
-      'POST',
-      query
-    );
-  };
+  public createOne = createMethod(
+    async (query: IPageService_createOne_Query) => {
+      return this.request<IPageService_createOne_Resp>(
+        replaceUrlParams('/page', query),
+        'POST',
+        query
+      );
+    },
+    {
+      tags: ['page', 'toM'],
+      pathName: '/page',
+      method: 'POST',
+      description: '',
+      query: {
+        schema: ServiceSchemas.PageService_createOne_Query,
+      },
+      response: {
+        schema: ServiceSchemas.PageService_createOne_Resp,
+      },
+    }
+  );
 
   /**
    * PageService.updateOne
@@ -413,13 +445,27 @@ export class PageService extends BaseService {
    * - pathName: /page/:name
    * - method: PUT
    */
-  public updateOne = async (query: IPageService_updateOne_Query) => {
-    return this.request<IPageService_updateOne_Resp>(
-      replaceUrlParams('/page/:name', query),
-      'PUT',
-      query
-    );
-  };
+  public updateOne = createMethod(
+    async (query: IPageService_updateOne_Query) => {
+      return this.request<IPageService_updateOne_Resp>(
+        replaceUrlParams('/page/:name', query),
+        'PUT',
+        query
+      );
+    },
+    {
+      tags: ['page', 'toM'],
+      pathName: '/page/:name',
+      method: 'PUT',
+      description: '',
+      query: {
+        schema: ServiceSchemas.PageService_updateOne_Query,
+      },
+      response: {
+        schema: ServiceSchemas.PageService_updateOne_Resp,
+      },
+    }
+  );
 
   /**
    * PageService.removeOne
@@ -428,13 +474,27 @@ export class PageService extends BaseService {
    * - pathName: /page/:name
    * - method: DELETE
    */
-  public removeOne = async (query: IPageService_removeOne_Query) => {
-    return this.request<IPageService_removeOne_Resp>(
-      replaceUrlParams('/page/:name', query),
-      'DELETE',
-      query
-    );
-  };
+  public removeOne = createMethod(
+    async (query: IPageService_removeOne_Query) => {
+      return this.request<IPageService_removeOne_Resp>(
+        replaceUrlParams('/page/:name', query),
+        'DELETE',
+        query
+      );
+    },
+    {
+      tags: ['page', 'toM'],
+      pathName: '/page/:name',
+      method: 'DELETE',
+      description: '',
+      query: {
+        schema: ServiceSchemas.PageService_removeOne_Query,
+      },
+      response: {
+        schema: ServiceSchemas.PageService_removeOne_Resp,
+      },
+    }
+  );
 }
 
 export class ReserveService extends BaseService {
@@ -445,13 +505,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_activity
    * - method: GET
    */
-  public getActivityList = async (query: IReserveService_getActivityList_Query) => {
-    return this.request<IReserveService_getActivityList_Resp>(
-      replaceUrlParams('/reserve_activity', query),
-      'GET',
-      query
-    );
-  };
+  public getActivityList = createMethod(
+    async (query: IReserveService_getActivityList_Query) => {
+      return this.request<IReserveService_getActivityList_Resp>(
+        replaceUrlParams('/reserve_activity', query),
+        'GET',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toC'],
+      pathName: '/reserve_activity',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_getActivityList_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_getActivityList_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.createActivity
@@ -460,13 +534,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_activity
    * - method: POST
    */
-  public createActivity = async (query: IReserveService_createActivity_Query) => {
-    return this.request<IReserveService_createActivity_Resp>(
-      replaceUrlParams('/reserve_activity', query),
-      'POST',
-      query
-    );
-  };
+  public createActivity = createMethod(
+    async (query: IReserveService_createActivity_Query) => {
+      return this.request<IReserveService_createActivity_Resp>(
+        replaceUrlParams('/reserve_activity', query),
+        'POST',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_activity',
+      method: 'POST',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_createActivity_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_createActivity_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.updateActivity
@@ -475,13 +563,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_activity/:id
    * - method: PUT
    */
-  public updateActivity = async (query: IReserveService_updateActivity_Query) => {
-    return this.request<IReserveService_updateActivity_Resp>(
-      replaceUrlParams('/reserve_activity/:id', query),
-      'PUT',
-      query
-    );
-  };
+  public updateActivity = createMethod(
+    async (query: IReserveService_updateActivity_Query) => {
+      return this.request<IReserveService_updateActivity_Resp>(
+        replaceUrlParams('/reserve_activity/:id', query),
+        'PUT',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_activity/:id',
+      method: 'PUT',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_updateActivity_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_updateActivity_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.removeActivity
@@ -490,13 +592,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_activity/:id
    * - method: DELETE
    */
-  public removeActivity = async (query: IReserveService_removeActivity_Query) => {
-    return this.request<IReserveService_removeActivity_Resp>(
-      replaceUrlParams('/reserve_activity/:id', query),
-      'DELETE',
-      query
-    );
-  };
+  public removeActivity = createMethod(
+    async (query: IReserveService_removeActivity_Query) => {
+      return this.request<IReserveService_removeActivity_Resp>(
+        replaceUrlParams('/reserve_activity/:id', query),
+        'DELETE',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_activity/:id',
+      method: 'DELETE',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_removeActivity_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_removeActivity_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.getCalenderList
@@ -505,13 +621,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_calendar
    * - method: GET
    */
-  public getCalenderList = async (query: IReserveService_getCalenderList_Query) => {
-    return this.request<IReserveService_getCalenderList_Resp>(
-      replaceUrlParams('/reserve_calendar', query),
-      'GET',
-      query
-    );
-  };
+  public getCalenderList = createMethod(
+    async (query: IReserveService_getCalenderList_Query) => {
+      return this.request<IReserveService_getCalenderList_Resp>(
+        replaceUrlParams('/reserve_calendar', query),
+        'GET',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toC'],
+      pathName: '/reserve_calendar',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_getCalenderList_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_getCalenderList_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.createCalender
@@ -520,13 +650,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_calendar
    * - method: POST
    */
-  public createCalender = async (query: IReserveService_createCalender_Query) => {
-    return this.request<IReserveService_createCalender_Resp>(
-      replaceUrlParams('/reserve_calendar', query),
-      'POST',
-      query
-    );
-  };
+  public createCalender = createMethod(
+    async (query: IReserveService_createCalender_Query) => {
+      return this.request<IReserveService_createCalender_Resp>(
+        replaceUrlParams('/reserve_calendar', query),
+        'POST',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_calendar',
+      method: 'POST',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_createCalender_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_createCalender_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.updateCalender
@@ -535,13 +679,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_calendar/:id
    * - method: PUT
    */
-  public updateCalender = async (query: IReserveService_updateCalender_Query) => {
-    return this.request<IReserveService_updateCalender_Resp>(
-      replaceUrlParams('/reserve_calendar/:id', query),
-      'PUT',
-      query
-    );
-  };
+  public updateCalender = createMethod(
+    async (query: IReserveService_updateCalender_Query) => {
+      return this.request<IReserveService_updateCalender_Resp>(
+        replaceUrlParams('/reserve_calendar/:id', query),
+        'PUT',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_calendar/:id',
+      method: 'PUT',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_updateCalender_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_updateCalender_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.getUserRequestList
@@ -550,13 +708,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_request
    * - method: GET
    */
-  public getUserRequestList = async (query: IReserveService_getUserRequestList_Query) => {
-    return this.request<IReserveService_getUserRequestList_Resp>(
-      replaceUrlParams('/reserve_request', query),
-      'GET',
-      query
-    );
-  };
+  public getUserRequestList = createMethod(
+    async (query: IReserveService_getUserRequestList_Query) => {
+      return this.request<IReserveService_getUserRequestList_Resp>(
+        replaceUrlParams('/reserve_request', query),
+        'GET',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_request',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_getUserRequestList_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_getUserRequestList_Resp,
+      },
+    }
+  );
 
   /**
    * ReserveService.confirmUserRequest
@@ -565,13 +737,27 @@ export class ReserveService extends BaseService {
    * - pathName: /reserve_request/:id/confirm
    * - method: PUT
    */
-  public confirmUserRequest = async (query: IReserveService_confirmUserRequest_Query) => {
-    return this.request<IReserveService_confirmUserRequest_Resp>(
-      replaceUrlParams('/reserve_request/:id/confirm', query),
-      'PUT',
-      query
-    );
-  };
+  public confirmUserRequest = createMethod(
+    async (query: IReserveService_confirmUserRequest_Query) => {
+      return this.request<IReserveService_confirmUserRequest_Resp>(
+        replaceUrlParams('/reserve_request/:id/confirm', query),
+        'PUT',
+        query
+      );
+    },
+    {
+      tags: ['reserve', 'toM'],
+      pathName: '/reserve_request/:id/confirm',
+      method: 'PUT',
+      description: '',
+      query: {
+        schema: ServiceSchemas.ReserveService_confirmUserRequest_Query,
+      },
+      response: {
+        schema: ServiceSchemas.ReserveService_confirmUserRequest_Resp,
+      },
+    }
+  );
 }
 
 export class SystemService extends BaseService {
@@ -582,9 +768,23 @@ export class SystemService extends BaseService {
    * - pathName: /system/apiDoc
    * - method: GET
    */
-  public getApiDoc = async () => {
-    return this.request<ISystemService_getApiDoc_Resp>(replaceUrlParams('/system/apiDoc'), 'GET');
-  };
+  public getApiDoc = createMethod(
+    async () => {
+      return this.request<ISystemService_getApiDoc_Resp>(replaceUrlParams('/system/apiDoc'), 'GET');
+    },
+    {
+      tags: ['system', 'toM'],
+      pathName: '/system/apiDoc',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.SystemService_getApiDoc_Query,
+      },
+      response: {
+        schema: ServiceSchemas.SystemService_getApiDoc_Resp,
+      },
+    }
+  );
 
   /**
    * SystemService.getList
@@ -593,9 +793,23 @@ export class SystemService extends BaseService {
    * - pathName: /system
    * - method: GET
    */
-  public getList = async () => {
-    return this.request<ISystemService_getList_Resp>(replaceUrlParams('/system'), 'GET');
-  };
+  public getList = createMethod(
+    async () => {
+      return this.request<ISystemService_getList_Resp>(replaceUrlParams('/system'), 'GET');
+    },
+    {
+      tags: ['system', 'toM'],
+      pathName: '/system',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.SystemService_getList_Query,
+      },
+      response: {
+        schema: ServiceSchemas.SystemService_getList_Resp,
+      },
+    }
+  );
 
   /**
    * SystemService.updateOne
@@ -604,9 +818,23 @@ export class SystemService extends BaseService {
    * - pathName: /system/:name
    * - method: PUT
    */
-  public updateOne = async () => {
-    return this.request<ISystemService_updateOne_Resp>(replaceUrlParams('/system/:name'), 'PUT');
-  };
+  public updateOne = createMethod(
+    async () => {
+      return this.request<ISystemService_updateOne_Resp>(replaceUrlParams('/system/:name'), 'PUT');
+    },
+    {
+      tags: ['system', 'toM'],
+      pathName: '/system/:name',
+      method: 'PUT',
+      description: '',
+      query: {
+        schema: ServiceSchemas.SystemService_updateOne_Query,
+      },
+      response: {
+        schema: ServiceSchemas.SystemService_updateOne_Resp,
+      },
+    }
+  );
 }
 
 export class UserService extends BaseService {
@@ -617,9 +845,23 @@ export class UserService extends BaseService {
    * - pathName: /user
    * - method: GET
    */
-  public getUserInfo = async () => {
-    return this.request<IUserService_getUserInfo_Resp>(replaceUrlParams('/user'), 'GET');
-  };
+  public getUserInfo = createMethod(
+    async () => {
+      return this.request<IUserService_getUserInfo_Resp>(replaceUrlParams('/user'), 'GET');
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_getUserInfo_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_getUserInfo_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.updateSession
@@ -628,12 +870,26 @@ export class UserService extends BaseService {
    * - pathName: /user/updateSession
    * - method: GET
    */
-  public updateSession = async () => {
-    return this.request<IUserService_updateSession_Resp>(
-      replaceUrlParams('/user/updateSession'),
-      'GET'
-    );
-  };
+  public updateSession = createMethod(
+    async () => {
+      return this.request<IUserService_updateSession_Resp>(
+        replaceUrlParams('/user/updateSession'),
+        'GET'
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/updateSession',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_updateSession_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_updateSession_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.getShiluRoles
@@ -642,12 +898,26 @@ export class UserService extends BaseService {
    * - pathName: /user/shiluRoles
    * - method: GET
    */
-  public getShiluRoles = async () => {
-    return this.request<IUserService_getShiluRoles_Resp>(
-      replaceUrlParams('/user/shiluRoles'),
-      'GET'
-    );
-  };
+  public getShiluRoles = createMethod(
+    async () => {
+      return this.request<IUserService_getShiluRoles_Resp>(
+        replaceUrlParams('/user/shiluRoles'),
+        'GET'
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/shiluRoles',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_getShiluRoles_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_getShiluRoles_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.assignShiluRoles
@@ -656,13 +926,27 @@ export class UserService extends BaseService {
    * - pathName: /user/shiluRoles
    * - method: POST
    */
-  public assignShiluRoles = async (query: IUserService_assignShiluRoles_Query) => {
-    return this.request<IUserService_assignShiluRoles_Resp>(
-      replaceUrlParams('/user/shiluRoles', query),
-      'POST',
-      query
-    );
-  };
+  public assignShiluRoles = createMethod(
+    async (query: IUserService_assignShiluRoles_Query) => {
+      return this.request<IUserService_assignShiluRoles_Resp>(
+        replaceUrlParams('/user/shiluRoles', query),
+        'POST',
+        query
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/shiluRoles',
+      method: 'POST',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_assignShiluRoles_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_assignShiluRoles_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.removeShiluRoles
@@ -671,13 +955,27 @@ export class UserService extends BaseService {
    * - pathName: /user/shiluRoles
    * - method: DELETE
    */
-  public removeShiluRoles = async (query: IUserService_removeShiluRoles_Query) => {
-    return this.request<IUserService_removeShiluRoles_Resp>(
-      replaceUrlParams('/user/shiluRoles', query),
-      'DELETE',
-      query
-    );
-  };
+  public removeShiluRoles = createMethod(
+    async (query: IUserService_removeShiluRoles_Query) => {
+      return this.request<IUserService_removeShiluRoles_Resp>(
+        replaceUrlParams('/user/shiluRoles', query),
+        'DELETE',
+        query
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/shiluRoles',
+      method: 'DELETE',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_removeShiluRoles_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_removeShiluRoles_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.getEnterCode
@@ -686,13 +984,27 @@ export class UserService extends BaseService {
    * - pathName: /user/enterCode
    * - method: GET
    */
-  public getEnterCode = async (query: IUserService_getEnterCode_Query) => {
-    return this.request<IUserService_getEnterCode_Resp>(
-      replaceUrlParams('/user/enterCode', query),
-      'GET',
-      query
-    );
-  };
+  public getEnterCode = createMethod(
+    async (query: IUserService_getEnterCode_Query) => {
+      return this.request<IUserService_getEnterCode_Resp>(
+        replaceUrlParams('/user/enterCode', query),
+        'GET',
+        query
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/enterCode',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_getEnterCode_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_getEnterCode_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.getLeaveInfo
@@ -701,13 +1013,27 @@ export class UserService extends BaseService {
    * - pathName: /user/leaveInfo
    * - method: GET
    */
-  public getLeaveInfo = async (query: IUserService_getLeaveInfo_Query) => {
-    return this.request<IUserService_getLeaveInfo_Resp>(
-      replaceUrlParams('/user/leaveInfo', query),
-      'GET',
-      query
-    );
-  };
+  public getLeaveInfo = createMethod(
+    async (query: IUserService_getLeaveInfo_Query) => {
+      return this.request<IUserService_getLeaveInfo_Resp>(
+        replaceUrlParams('/user/leaveInfo', query),
+        'GET',
+        query
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/leaveInfo',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_getLeaveInfo_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_getLeaveInfo_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.addReserveRequest
@@ -716,13 +1042,27 @@ export class UserService extends BaseService {
    * - pathName: /user/reserve_request
    * - method: POST
    */
-  public addReserveRequest = async (query: IUserService_addReserveRequest_Query) => {
-    return this.request<IUserService_addReserveRequest_Resp>(
-      replaceUrlParams('/user/reserve_request', query),
-      'POST',
-      query
-    );
-  };
+  public addReserveRequest = createMethod(
+    async (query: IUserService_addReserveRequest_Query) => {
+      return this.request<IUserService_addReserveRequest_Resp>(
+        replaceUrlParams('/user/reserve_request', query),
+        'POST',
+        query
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/reserve_request',
+      method: 'POST',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_addReserveRequest_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_addReserveRequest_Resp,
+      },
+    }
+  );
 
   /**
    * UserService.cancelReserveRequest
@@ -731,13 +1071,27 @@ export class UserService extends BaseService {
    * - pathName: /user/reserve_request/:id/cancel
    * - method: PUT
    */
-  public cancelReserveRequest = async (query: IUserService_cancelReserveRequest_Query) => {
-    return this.request<IUserService_cancelReserveRequest_Resp>(
-      replaceUrlParams('/user/reserve_request/:id/cancel', query),
-      'PUT',
-      query
-    );
-  };
+  public cancelReserveRequest = createMethod(
+    async (query: IUserService_cancelReserveRequest_Query) => {
+      return this.request<IUserService_cancelReserveRequest_Resp>(
+        replaceUrlParams('/user/reserve_request/:id/cancel', query),
+        'PUT',
+        query
+      );
+    },
+    {
+      tags: ['user', 'toC'],
+      pathName: '/user/reserve_request/:id/cancel',
+      method: 'PUT',
+      description: '',
+      query: {
+        schema: ServiceSchemas.UserService_cancelReserveRequest_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UserService_cancelReserveRequest_Resp,
+      },
+    }
+  );
 }
 
 export function replaceUrlParams(url: string, data?: any) {
@@ -752,6 +1106,10 @@ export function replaceUrlParams(url: string, data?: any) {
   }
 
   return url;
+}
+
+export function createMethod<T, M>(method: T, $meta: M) {
+  return Object.assign(method, { $meta });
 }
 
 export const createAllService = (tap?: (s: BaseService) => void) => {
@@ -966,13 +1324,26 @@ export class SnapshotcontrollerService extends BaseService {
    * - pathName: /snapshot
    * - method: POST
    */
-  public create = async (query: ISnapshotcontrollerService_create_Query) => {
-    return this.request<ISnapshotcontrollerService_create_Resp>(
-      replaceUrlParams('/snapshot', query),
-      'POST',
-      query
-    );
-  };
+  public create = createMethod(
+    async (query: ISnapshotcontrollerService_create_Query) => {
+      return this.request<ISnapshotcontrollerService_create_Resp>(
+        replaceUrlParams('/snapshot', query),
+        'POST',
+        query
+      );
+    },
+    {
+      pathName: '/snapshot',
+      method: 'POST',
+      description: '快照上传',
+      query: {
+        schema: ServiceSchemas.SnapshotcontrollerService_create_Query,
+      },
+      response: {
+        schema: ServiceSchemas.SnapshotcontrollerService_create_Resp,
+      },
+    }
+  );
 }
 
 export class FaceindexcontrollerService extends BaseService {
@@ -983,12 +1354,25 @@ export class FaceindexcontrollerService extends BaseService {
    * - pathName: /faceIndex
    * - method: GET
    */
-  public getPage = async () => {
-    return this.request<IFaceindexcontrollerService_getPage_Resp>(
-      replaceUrlParams('/faceIndex'),
-      'GET'
-    );
-  };
+  public getPage = createMethod(
+    async () => {
+      return this.request<IFaceindexcontrollerService_getPage_Resp>(
+        replaceUrlParams('/faceIndex'),
+        'GET'
+      );
+    },
+    {
+      pathName: '/faceIndex',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.FaceindexcontrollerService_getPage_Query,
+      },
+      response: {
+        schema: ServiceSchemas.FaceindexcontrollerService_getPage_Resp,
+      },
+    }
+  );
 }
 
 export class AuthcontrollerService extends BaseService {
@@ -999,13 +1383,26 @@ export class AuthcontrollerService extends BaseService {
    * - pathName: /auth/login
    * - method: POST
    */
-  public login = async (query: IAuthcontrollerService_login_Query) => {
-    return this.request<IAuthcontrollerService_login_Resp>(
-      replaceUrlParams('/auth/login', query),
-      'POST',
-      query
-    );
-  };
+  public login = createMethod(
+    async (query: IAuthcontrollerService_login_Query) => {
+      return this.request<IAuthcontrollerService_login_Resp>(
+        replaceUrlParams('/auth/login', query),
+        'POST',
+        query
+      );
+    },
+    {
+      pathName: '/auth/login',
+      method: 'POST',
+      description: '',
+      query: {
+        schema: ServiceSchemas.AuthcontrollerService_login_Query,
+      },
+      response: {
+        schema: ServiceSchemas.AuthcontrollerService_login_Resp,
+      },
+    }
+  );
 }
 
 export class UsercontrollerService extends BaseService {
@@ -1016,9 +1413,22 @@ export class UsercontrollerService extends BaseService {
    * - pathName: /user
    * - method: GET
    */
-  public getUser = async () => {
-    return this.request<IUsercontrollerService_getUser_Resp>(replaceUrlParams('/user'), 'GET');
-  };
+  public getUser = createMethod(
+    async () => {
+      return this.request<IUsercontrollerService_getUser_Resp>(replaceUrlParams('/user'), 'GET');
+    },
+    {
+      pathName: '/user',
+      method: 'GET',
+      description: '获取用户信息',
+      query: {
+        schema: ServiceSchemas.UsercontrollerService_getUser_Query,
+      },
+      response: {
+        schema: ServiceSchemas.UsercontrollerService_getUser_Resp,
+      },
+    }
+  );
 }
 
 export class DevicecontrollerService extends BaseService {
@@ -1029,9 +1439,25 @@ export class DevicecontrollerService extends BaseService {
    * - pathName: /device
    * - method: GET
    */
-  public getPage = async () => {
-    return this.request<IDevicecontrollerService_getPage_Resp>(replaceUrlParams('/device'), 'GET');
-  };
+  public getPage = createMethod(
+    async () => {
+      return this.request<IDevicecontrollerService_getPage_Resp>(
+        replaceUrlParams('/device'),
+        'GET'
+      );
+    },
+    {
+      pathName: '/device',
+      method: 'GET',
+      description: '',
+      query: {
+        schema: ServiceSchemas.DevicecontrollerService_getPage_Query,
+      },
+      response: {
+        schema: ServiceSchemas.DevicecontrollerService_getPage_Resp,
+      },
+    }
+  );
 }
 
 export function replaceUrlParams(url: string, data?: any) {
@@ -1046,6 +1472,10 @@ export function replaceUrlParams(url: string, data?: any) {
   }
 
   return url;
+}
+
+export function createMethod<T, M>(method: T, $meta: M) {
+  return Object.assign(method, { $meta });
 }
 
 export const createAllService = (tap?: (s: BaseService) => void) => {

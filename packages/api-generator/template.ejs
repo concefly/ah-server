@@ -1,5 +1,7 @@
 import { BaseService } from './BaseService';
 
+
+
 /** interfaces */
 <% for (const [sName, rMap] of Object.entries(serviceMap)) { %>
 <% for (const [rName, rMeta] of Object.entries(rMap)) { %>
@@ -18,6 +20,7 @@ export const ServiceSchemas = {
   <% } %>
 }
 
+
 <% for (const [sName, rMap] of Object.entries(serviceMap)) { %>
 export class <%= sName %>Service extends BaseService {
   <% for (const [rName, rMeta] of Object.entries(rMap)) { %>
@@ -28,13 +31,26 @@ export class <%= sName %>Service extends BaseService {
    * - pathName: <%- rMeta.pathName %>
    * - method: <%- rMeta.method %>
    */
-  public <%= rName %> = async (<% if (rMeta.query) { %>query: I<%= sName %>Service_<%= rName %>_Query <% } %>) => {
+  public <%= rName %> = createMethod(async (<% if (rMeta.query) { %>query: I<%= sName %>Service_<%= rName %>_Query <% } %>) => {
     return this.request<I<%= sName %>Service_<%= rName %>_Resp>(
       replaceUrlParams('<%- rMeta.pathName %>', <% if (rMeta.query) { %>query,<% } %>),
       '<%- rMeta.method %>',
       <% if (rMeta.query) { %>query,<% } %>
     )
+  },
+  {
+    <% if (rMeta.tags) {%> tags: <%- JSON.stringify(rMeta.tags) %>, <%}%>
+    pathName: '<%- rMeta.pathName %>',
+    method: '<%- rMeta.method %>',
+    description: '<%- rMeta.description %>',
+    query: {
+      schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Query,
+    },
+    response: {
+      schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Resp,
+    },
   }
+  )
   <% } %>
 }
 <% } %>
@@ -52,6 +68,10 @@ export function replaceUrlParams(url: string, data?: any) {
   
   return url;
 }
+
+export function createMethod <T, M>(method: T, $meta: M) {
+  return Object.assign(method, { $meta });
+};
 
 export const createAllService = (tap?: (s: BaseService) => void) => {
   const result = {
