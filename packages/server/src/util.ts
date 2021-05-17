@@ -4,7 +4,7 @@ import { createBizError } from './error';
 /** jsonschema 校验 */
 export function validate<T>(data: any, schema: Schema): T {
   const result = jsonschemaValidate(data, schema, {
-    allowUnknownAttributes: false,
+    allowUnknownAttributes: true,
     rewrite: (_ins: any, _sch: Schema) => {
       if (typeof _ins !== 'undefined') {
         // _ins 有值，要检查
