@@ -1,6 +1,6 @@
 {
   "name": "ah-component",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "ah-component",
   "files": [
     "dist"
@@ -48,7 +48,7 @@
   },
   "sideEffects": false,
   "dependencies": {
-    "ah-api-type": "^1.0.1",
+    "ah-api-type": "^1.1.0",
     "dayjs": "^1.10.4",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.21",
