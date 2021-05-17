@@ -15,6 +15,7 @@ import { CloseEvt, ReadyEvt } from './Event';
 import * as fs from 'fs';
 import { BaseExtension } from './Extension';
 import { getRouterMeta } from './refactor';
+import * as jwt from 'jsonwebtoken';
 
 declare module '.' {
   interface IApplication extends BaseApp {}
@@ -252,4 +253,20 @@ export abstract class BaseApp extends Koa {
       this.logger.error(err);
     });
   }
+
+  readonly jwt = {
+    sign: <T extends Record<string, any>>(payload: T, expiresIn = '15d') =>
+      jwt.sign(payload, this.config.AUTH_SALT, { expiresIn }),
+    //
+    verify: <T extends any>(token: string, opt?: jwt.VerifyOptions) => {
+      try {
+        return jwt.verify(token, this.config.AUTH_SALT, opt) as T;
+      } catch (err) {
+        if (err instanceof jwt.JsonWebTokenError) return null;
+        if (err instanceof jwt.NotBeforeError) return null;
+        if (err instanceof jwt.TokenExpiredError) return null;
+        throw err;
+      }
+    },
+  };
 }

@@ -7,7 +7,13 @@ import 'koa-body';
 import { Schema } from 'jsonschema';
 
 export interface IApplication {}
+
+/** 来自 app 的 service */
 export interface IService {}
+
+/** 来自 extension 的 service */
+export interface IExtensionService {}
+export interface IMergedService extends IService, IExtensionService {}
 
 export interface IContext extends Koa.Context {}
 

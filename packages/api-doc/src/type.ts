@@ -2,8 +2,8 @@ import { ApiDocService } from './service';
 import { Schema } from 'jsonschema';
 
 declare module 'ah-server' {
-  interface IService {
-    apiDoc?: ApiDocService;
+  interface IExtensionService {
+    apiDoc: ApiDocService;
   }
 
   interface IRouterMeta {

@@ -1,4 +1,4 @@
-import { IApplication } from '.';
+import { IApplication, IMergedService } from '.';
 
 export class BaseService {
   readonly name = this.constructor.name;
@@ -10,7 +10,8 @@ export class BaseService {
   }
 
   protected get service() {
-    return this.app.service;
+    // FIXME: app.service 合并了 extension 提供的 service
+    return this.app.service as IMergedService;
   }
 
   protected logger = this.app.logger.extend(this.name);

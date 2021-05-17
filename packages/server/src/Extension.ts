@@ -1,7 +1,7 @@
-import { IApplication, IMiddleware, IService } from '.';
+import { IApplication, IMiddleware, IExtensionService } from '.';
 
 export abstract class BaseExtension {
-  getService(_app: IApplication): Partial<IService> {
+  getService(_app: IApplication): Partial<IExtensionService> {
     return {};
   }
 
