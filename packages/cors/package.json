@@ -1,0 +1,23 @@
+{
+  "name": "ah-cors",
+  "version": "0.0.0",
+  "main": "dist/index.js",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "ci": "ah-workflow ci",
+    "build": "ah-workflow build",
+    "prepublish": "npm run ci && npm run build"
+  },
+  "peerDependencies": {
+    "ah-server": ">3.2.4"
+  },
+  "devDependencies": {
+    "@types/koa-cors": "^0.0.0",
+    "ah-server": ">3.2.4"
+  },
+  "dependencies": {
+    "koa-cors": "^0.0.16"
+  }
+}
