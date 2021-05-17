@@ -1,13 +1,15 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import { CommonCRUD, List } from '../src';
-import { createCRUDProps, delay, getRandomPage } from './service';
-import { HashRouter as Router, Route, Switch } from 'react-router-dom';
+import { CommonCMSList, createCMSProps } from '../src';
+import { service } from './service';
+import { HashRouter as Router } from 'react-router-dom';
 
 export const App = () => {
+  const ss = createCMSProps(service);
+
   return (
     <Router>
-      <CommonCRUD {...createCRUDProps('/device')} />
+      <CommonCMSList list={ss} />
     </Router>
   );
 };

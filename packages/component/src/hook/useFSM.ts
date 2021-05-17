@@ -1,12 +1,5 @@
 import { useEffect, useState } from 'react';
 
-export const useFSM_le = <T extends { type: string }>(opt: {
-  init: () => T;
-  transition?: (s: T) => T | undefined;
-}) => {
-  return useFSM(opt.init, opt.transition);
-};
-
 export const useFSM = <T extends { type: string }>(
   init: () => T,
   transition?: (s: T) => T | undefined

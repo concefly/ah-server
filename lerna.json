@@ -1,11 +1,5 @@
 {
-  "packages": [
-    "packages/api-doc",
-    "packages/api-generator",
-    "packages/server",
-    "packages/static",
-    "packages/cors"
-  ],
+  "packages": ["packages/**"],
   "version": "independent",
   "npmClient": "cnpm"
 }

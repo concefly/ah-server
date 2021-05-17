@@ -1,17 +1,43 @@
 import { useRef } from 'react';
 import { useFSM } from './useFSM';
 
-export const useRequest = <Q, T>(service: (q: Q) => Promise<T>) => {
-  const lastQueryRef = useRef<Q>();
+export type IUseRequestRet<Q, T> = {
+  state:
+    | {
+        type: 'init';
+      }
+    | {
+        type: 'loading';
+      }
+    | {
+        type: 'success';
+        data: T;
+      }
+    | {
+        type: 'fail';
+        err: Error;
+      };
+  refresh: (q: Q) => Promise<void>;
+  lastQuery: () => Q | undefined;
+};
+
+export function useRequest<Q, T>(service: (q: Q) => Promise<T>): IUseRequestRet<Q, T>;
+
+export function useRequest<Q, T>(
+  service: ((q: Q) => Promise<T>) | undefined
+): IUseRequestRet<Q, T> | undefined;
+
+export function useRequest(service: any) {
+  const lastQueryRef = useRef();
 
   const st = useFSM<
     | { type: 'init' }
     | { type: 'loading' }
-    | { type: 'success'; data: T }
+    | { type: 'success'; data: any }
     | { type: 'fail'; err: Error }
   >(() => ({ type: 'init' }));
 
-  const refresh = async (q: Q) => {
+  const refresh = async (q: any) => {
     lastQueryRef.current = q;
 
     st.setState({ type: 'loading' });
@@ -25,9 +51,11 @@ export const useRequest = <Q, T>(service: (q: Q) => Promise<T>) => {
     }
   };
 
+  if (!service) return;
+
   return {
     state: st.state,
     refresh,
     lastQuery: () => lastQueryRef.current,
   };
-};
+}
