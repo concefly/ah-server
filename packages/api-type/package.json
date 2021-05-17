@@ -1,6 +1,6 @@
 {
   "name": "ah-api-type",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -13,6 +13,5 @@
   "devDependencies": {
     "ah-workflow": "^1.0.6",
     "typescript": "^4.2.4"
-  },
-  "dependencies": {}
+  }
 }
