@@ -47,9 +47,11 @@ export const EntityFieldSelect = ({
   return (
     <Select
       showSearch
+      loading={lsInfo.req.state.type === 'loading'}
       value={value}
       onChange={onChange}
       onSearch={handleSearch}
+      filterOption={false}
       options={lsInfo.pageData?.list.map(d => {
         return {
           label: resultDisplayMapper
