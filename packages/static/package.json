@@ -1,6 +1,6 @@
 {
   "name": "ah-static",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -14,7 +14,7 @@
     "ah-server": ">3.2.4"
   },
   "devDependencies": {
-    "ah-server": "^3.8.1",
+    "ah-server": "^3.8.2",
     "ah-workflow": "^1.0.6",
     "typescript": "^4.2.4"
   },
