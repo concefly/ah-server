@@ -1,7 +1,7 @@
 import { BaseController, IRouterMeta } from 'ah-server';
 import * as _ from 'lodash';
 import { data2Schema } from 'ah-api-generator';
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 
 export function setInDeep(
   data: any,

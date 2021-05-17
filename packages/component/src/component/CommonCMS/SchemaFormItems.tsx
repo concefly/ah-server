@@ -37,10 +37,10 @@ export const SchemaFormItems = ({
   const { idMapper = 'id' } = useCMSContext();
   const labelRender = useLabelRender();
 
-  const ft = schema.getFormatter();
+  const uiDef = schema.getUiDef();
 
   // idMapper 比较特殊，对比 dotPath 顶层
-  const hidden = ft?.ui?.hideInForm || dotPath[0] === idMapper;
+  const hidden = uiDef?.hideInForm || dotPath[0] === idMapper;
   const label = labelRender({ rootSchema, follow: dotPath.join('.'), schema }) || dotPath.join('.');
 
   // FIXME: 复杂类型的 list field 未验证，先不做处理
@@ -72,7 +72,7 @@ export const SchemaFormItems = ({
                     <SchemaFormItems
                       key={field.key}
                       rootSchema={rootSchema}
-                      schema={schema.items![i] || schema.items![0]}
+                      schema={schema.items}
                       dotPath={[...dotPath, field.name + '']}
                       __listFieldData={field}
                       fieldTail={
@@ -100,7 +100,7 @@ export const SchemaFormItems = ({
   }
 
   // 其他基本类型
-  const formField = ft?.ui?.formField;
+  const formField = uiDef?.formField;
 
   const filed = formField ? (
     formField.type === 'select' ? (
@@ -112,8 +112,8 @@ export const SchemaFormItems = ({
     <Input style={{ width: '100%' }} allowClear />
   );
 
-  ft?.ui?.formField?.type === 'select' ? (
-    <FieldSelect {...ft.ui.formField} />
+  uiDef?.formField?.type === 'select' ? (
+    <FieldSelect {...uiDef.formField} />
   ) : schema.type === 'integer' ? (
     <InputNumber style={{ width: '100%' }} />
   ) : (

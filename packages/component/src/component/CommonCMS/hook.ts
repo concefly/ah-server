@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useRequest } from '../..';
+import { useRequest } from '../../hook';
 import { useCMSContext } from './context';
 import { defaultLabelRender } from './locale';
 import { RichSchema } from './RichSchema';

@@ -66,8 +66,8 @@ export const List = () => {
     let columns: any[] = [];
 
     const itemSchema = lsInfo.itemSchema;
-    const formatter = itemSchema.getFormatter();
-    const follows = formatter?.ui?.list?.columns || Object.keys(itemSchema.properties || {});
+    const uiDef = itemSchema.getUiDef();
+    const follows = uiDef?.list?.columns || Object.keys(itemSchema.properties || {});
 
     // object 类型 -> 每个字段占一列
     follows.forEach(follow => {

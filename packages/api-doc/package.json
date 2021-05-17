@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "ah-api-generator": "^2.2.0",
-    "jsonschema": "^1.4.0",
+    "ah-api-type": "^0.0.0",
     "lodash": "^4.17.21"
   },
   "gitHead": "921f431b367105d8359cf126677dc17172d79be8"

@@ -30,17 +30,17 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
 
   if (typeof value === 'undefined') return <Text type='secondary'>(未定义)</Text>;
 
-  const ft = schema.getFormatter();
+  const uiDef = schema.getUiDef();
 
-  if (ft?.ui?.follow) {
-    const nextSchema = schema.getByDataDotPath(ft.ui.follow);
+  if (uiDef?.follow) {
+    const nextSchema = schema.getByDataDotPath(uiDef.follow);
 
     if (nextSchema) {
       return (
         <DataFormatter
           rootValue={rootValue}
-          follow={[follow, ft.ui.follow].join('.')}
-          value={_.get(value, ft.ui.follow)}
+          follow={[follow, uiDef.follow].join('.')}
+          value={_.get(value, uiDef.follow)}
           schema={nextSchema}
           style={style}
         />
@@ -48,9 +48,9 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
     }
   }
 
-  if (schema.type === 'array' && schema.items?.length && Array.isArray(value)) {
+  if (schema.type === 'array' && schema.items && Array.isArray(value)) {
     // string[] 的效果特殊处理下
-    if (schema.items.every(s => s.type === 'string')) {
+    if (schema.items.type === 'string') {
       return value.map((v, i) => <Tag key={i}>{v}</Tag>);
     }
 
@@ -61,7 +61,7 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
             <DataFormatter
               rootValue={rootValue}
               follow={[follow, i].join('.')}
-              schema={schema.items![i] || schema.items![0]}
+              schema={schema.items!}
               value={item}
             />
             <hr />
@@ -72,11 +72,11 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
   }
 
   if (schema.type === 'string' || schema.type === 'integer') {
-    if (ft?.ui?.type === 'image') {
+    if (uiDef?.type === 'image') {
       return <Image src={value} style={style} />;
     }
 
-    if (ft?.ui?.type === 'richtext') {
+    if (uiDef?.type === 'richtext') {
       return (
         <div
           dangerouslySetInnerHTML={{ __html: value }}
@@ -85,17 +85,17 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
       );
     }
 
-    if (ft?.ui?.type === 'timestamp') {
+    if (uiDef?.type === 'timestamp') {
       return <time style={style}>{dayjs(value).format('YYYY-MM-DD HH:mm:ss')}</time>;
     }
 
-    if (ft?.ui?.type === 'pre') {
+    if (uiDef?.type === 'pre') {
       return <div style={{ margin: 0, whiteSpace: 'pre-line', ...style }}>{value}</div>;
     }
 
     // 实体超链接
-    if (ft?.ui?.linkToEntity) {
-      const targetEntityProps = listCtx.find(c => c.entity === ft.ui!.linkToEntity?.name);
+    if (uiDef?.linkToEntity) {
+      const targetEntityProps = listCtx.find(c => c.entity === uiDef.linkToEntity?.name);
 
       if (targetEntityProps) {
         const popoverContent = (
@@ -108,7 +108,7 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
 
         return (
           <Popover content={popoverContent}>
-            <Link to={`/${ft.ui.linkToEntity.name}/${value}`} style={style}>
+            <Link to={`/${uiDef.linkToEntity.name}/${value}`} style={style}>
               {value}
             </Link>
           </Popover>
@@ -119,8 +119,8 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
     let pipeResult = value as string | number;
 
     // renderPipe
-    if (ft?.ui?.renderPipe) {
-      ft.ui.renderPipe.forEach(pipe => {
+    if (uiDef?.renderPipe) {
+      uiDef.renderPipe.forEach(pipe => {
         if (pipe.type === 'truncate') {
           pipeResult = _.truncate(pipeResult + '', { length: pipe.length || 20 });
         }

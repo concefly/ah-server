@@ -4,7 +4,7 @@ import 'reflect-metadata';
 import * as Koa from 'koa';
 import 'koa-body';
 
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 
 export interface IApplication {}
 

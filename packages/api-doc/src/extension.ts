@@ -1,6 +1,6 @@
 import { BaseExtension, IApplication } from 'ah-server';
 import { ApiDocService } from './service';
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 
 export class ApiDocExtension extends BaseExtension {
   constructor(private components?: { [name: string]: Schema }) {

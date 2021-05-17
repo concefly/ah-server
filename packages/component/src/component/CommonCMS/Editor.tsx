@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Form, Input, InputNumber, Spin, Typography, message } from 'antd';
-import { useRequest } from '../../hook/useRequest';
-import { ICMSProps } from './type';
+import { Button, Form, Spin, Typography, message } from 'antd';
 import { Link, useHistory } from 'react-router-dom';
 import { SchemaFormItems } from './SchemaFormItems';
 import { useReadServiceInfo, useUpdateServiceInfo } from './hook';

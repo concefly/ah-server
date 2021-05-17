@@ -1,10 +1,10 @@
-import { Schema } from 'jsonschema';
+import { Schema, SchemaUi } from 'ah-api-type';
 import _ from 'lodash';
-import { IPagination, ISchemaFormatter } from './type';
+import { IPagination } from './type';
 
 export class RichSchema {
-  static create<T extends RichSchema | Schema>(input: T): RichSchema {
-    if (input instanceof RichSchema) return input as any;
+  static create(input: any): RichSchema {
+    if (input instanceof RichSchema) return input;
     return new RichSchema(input);
   }
 
@@ -24,9 +24,13 @@ export class RichSchema {
     return nextSchema ? RichSchema.create(nextSchema) : undefined;
   }
 
-  getFormatter() {
+  getUiDef() {
     try {
-      return this.schema?.format ? (JSON.parse(this.schema.format) as ISchemaFormatter) : undefined;
+      const legacyFormat = (this.schema as any)?.format
+        ? (JSON.parse((this.schema as any).format).ui as SchemaUi)
+        : undefined;
+
+      return { ...this.schema.__ui, ...legacyFormat };
     } catch (_err) {
       return undefined;
     }
@@ -112,13 +116,15 @@ export class RichSchema {
   }
 
   get properties() {
-    return this.schema.properties
+    return this.schema.type === 'object' && this.schema.properties
       ? _.mapValues(this.schema.properties, p => RichSchema.create(p))
       : undefined;
   }
 
   get items() {
-    return this.schema.items ? _.castArray(this.schema.items).map(RichSchema.create) : undefined;
+    return this.schema.type === 'array' && this.schema.items
+      ? RichSchema.create(this.schema.items)
+      : undefined;
   }
 
   get title() {
@@ -126,11 +132,7 @@ export class RichSchema {
   }
 
   get required() {
-    return this.schema.required
-      ? typeof this.schema.required === 'boolean'
-        ? Object.keys(this.properties || {})
-        : _.castArray(this.schema.required)
-      : undefined;
+    return this.schema.type === 'object' ? this.schema.required : undefined;
   }
 
   get type() {

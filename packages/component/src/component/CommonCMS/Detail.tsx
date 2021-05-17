@@ -30,9 +30,9 @@ export const Detail = ({ id }: { id: any }) => {
     if (rsInfo) {
       const itemSchema = rsInfo.itemSchema;
 
-      const formatter = itemSchema.getFormatter();
-      const follows = formatter?.ui?.detail?.columns || Object.keys(itemSchema.properties || {});
-      const split = formatter?.ui?.detail?.split;
+      const uiDef = itemSchema.getUiDef();
+      const follows = uiDef?.detail?.columns || Object.keys(itemSchema.properties || {});
+      const split = uiDef?.detail?.split;
 
       follows.map(follow => {
         const subSchema = itemSchema.getByDataDotPath(follow);

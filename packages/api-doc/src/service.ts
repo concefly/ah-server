@@ -1,7 +1,7 @@
 import { BaseService, getOwnPropertyEntries, getRouterMeta } from 'ah-server';
 import { generateRouterMetaInfo, IRouterMetaExt } from './router';
 import * as _ from 'lodash';
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 
 export class ApiDocService extends BaseService {
   components?: { [name: string]: Schema };

@@ -9,8 +9,8 @@ export const CMSContext = React.createContext<ICMSProps>({
       pathName: '',
       method: '',
       description: '',
-      query: { schema: {} },
-      response: { schema: {} },
+      query: { schema: { type: 'object' as 'object' } },
+      response: { schema: { type: 'object' as 'object' } },
     },
   }),
 });

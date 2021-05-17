@@ -1,5 +1,5 @@
 import { ApiDocService } from './service';
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 
 declare module 'ah-server' {
   interface IExtensionService {
