@@ -1,6 +1,6 @@
 {
   "name": "ah-server",
-  "version": "3.8.4",
+  "version": "3.8.5",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@types/koa": "^2.11.6",
-    "ah-api-type": "^1.1.0",
+    "ah-api-type": "^1.1.1",
     "ah-logger": "^0.1.4",
     "cron": "^1.8.2",
     "jsonschema": "^1.4.0",

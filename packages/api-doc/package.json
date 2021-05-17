@@ -1,6 +1,6 @@
 {
   "name": "ah-api-doc",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "dist/index.js",
   "files": [
     "dist"
@@ -15,13 +15,13 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.168",
-    "ah-server": "^3.8.4",
+    "ah-server": "^3.8.5",
     "ah-workflow": "^1.0.6",
     "typescript": "^4.2.4"
   },
   "dependencies": {
     "ah-api-generator": "^2.2.0",
-    "ah-api-type": "^1.1.0",
+    "ah-api-type": "^1.1.1",
     "lodash": "^4.17.21"
   },
   "gitHead": "921f431b367105d8359cf126677dc17172d79be8"
