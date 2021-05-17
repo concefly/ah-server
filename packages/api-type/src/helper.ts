@@ -1,13 +1,13 @@
-import { Schema } from './type';
+import { Schema, SchemaArray, SchemaObject } from './type';
 
-export function createList(item: Schema): Schema {
+export function createList<T extends Schema>(item: T): SchemaArray {
   return {
     type: 'array',
     items: item,
   };
 }
 
-export function createPagination(item: Schema): Schema {
+export function createPagination<T extends Schema>(item: T): SchemaObject {
   return {
     type: 'object',
     properties: {

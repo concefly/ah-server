@@ -41,7 +41,13 @@ export type SchemaUi = {
   };
 };
 
-export type SchemaObject = {
+export type SchemaBase = {
+  title?: string;
+  description?: string;
+  __ui?: SchemaUi;
+};
+
+export type SchemaObject = SchemaBase & {
   type: 'object';
   properties?: {
     [name: string]: Schema;
@@ -49,24 +55,20 @@ export type SchemaObject = {
   required?: string[];
 };
 
-export type SchemaArray = {
+export type SchemaArray = SchemaBase & {
   type: 'array';
   items?: Schema;
 };
 
-export type SchemaInteger = {
+export type SchemaInteger = SchemaBase & {
   type: 'integer';
   enum?: number[];
 };
 
-export type SchemaString = {
+export type SchemaString = SchemaBase & {
   type: 'string';
   enum?: string[];
 };
 
 /** json schema 子集 */
-export type Schema = (SchemaObject | SchemaArray | SchemaInteger | SchemaString) & {
-  title?: string;
-  description?: string;
-  __ui?: SchemaUi;
-};
+export type Schema = SchemaObject | SchemaArray | SchemaInteger | SchemaString;
