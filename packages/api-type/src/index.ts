@@ -56,10 +56,12 @@ export type SchemaArray = {
 
 export type SchemaInteger = {
   type: 'integer';
+  enum?: number[];
 };
 
 export type SchemaString = {
   type: 'string';
+  enum?: string[];
 };
 
 /** json schema 子集 */
