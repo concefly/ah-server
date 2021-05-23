@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Card, Col, Descriptions, Popconfirm, Row, Space, Typography } from 'antd';
-import { useRequest } from '../../hook/useRequest';
+import { useRequest } from 'ah-hook';
 import { Link, useHistory } from 'react-router-dom';
 import { __ } from './locale';
 import { DataFormatter } from './DataFormatter';
 import _ from 'lodash';
 import { useCMSContext } from './context';
-import { useReadServiceInfo, useLabelRender } from './hook';
+import { useReadServiceInfo, useLabelRender, useLogger } from './hook';
 
 export const Detail = ({ id }: { id: any }) => {
   const his = useHistory();
@@ -18,6 +18,8 @@ export const Detail = ({ id }: { id: any }) => {
     deleteService,
     idMapper = 'id',
   } = useCMSContext();
+
+  const logger = useLogger('Detail');
 
   const deleteReq = useRequest(deleteService);
   const rsInfo = useReadServiceInfo(id);
@@ -36,7 +38,10 @@ export const Detail = ({ id }: { id: any }) => {
 
       follows.map(follow => {
         const subSchema = itemSchema.getByDataDotPath(follow);
-        if (!subSchema) return;
+        if (!subSchema) {
+          logger.error(`no subSchema at ${follow}, skip`);
+          return;
+        }
 
         const content = rsInfo.detailData && (
           <DataFormatter
@@ -47,7 +52,7 @@ export const Detail = ({ id }: { id: any }) => {
           />
         );
 
-        const title = labelRender({ rootSchema: itemSchema, follow, schema: subSchema });
+        const title = labelRender({ key: _.last(follow.split('.'))!, schema: subSchema });
 
         if (split?.includes(follow)) {
           splitItems.push(

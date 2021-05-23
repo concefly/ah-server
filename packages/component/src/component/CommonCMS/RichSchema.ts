@@ -30,7 +30,10 @@ export class RichSchema {
         ? (JSON.parse((this.schema as any).format).ui as SchemaUi)
         : undefined;
 
-      return { ...this.schema.__ui, ...legacyFormat };
+      return this.schema.__ui || legacyFormat
+        ? { ...this.schema.__ui, ...legacyFormat }
+        : undefined;
+      //
     } catch (_err) {
       return undefined;
     }
@@ -115,6 +118,10 @@ export class RichSchema {
     }
   }
 
+  get __raw() {
+    return this.schema;
+  }
+
   get properties() {
     return this.schema.type === 'object' && this.schema.properties
       ? _.mapValues(this.schema.properties, p => RichSchema.create(p))
@@ -133,6 +140,12 @@ export class RichSchema {
 
   get required() {
     return this.schema.type === 'object' ? this.schema.required : undefined;
+  }
+
+  get enum() {
+    return this.schema.type === 'string' || this.schema.type === 'integer'
+      ? this.schema.enum
+      : undefined;
   }
 
   get type() {

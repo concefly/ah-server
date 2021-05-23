@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Button, Form, Typography, message } from 'antd';
+import { Button, Form, Typography, message, FormProps } from 'antd';
 import { useHistory } from 'react-router-dom';
 import { __ } from './locale';
 import { SchemaFormItems } from './SchemaFormItems';
@@ -9,37 +9,46 @@ import { useCreateServiceInfo } from './hook';
 const { Text } = Typography;
 
 export const Creator = () => {
-  const { routerPrefix, entity } = useCMSContext();
+  const { routerPrefix, entity, customRender } = useCMSContext();
   const his = useHistory();
 
-  const ucInfo = useCreateServiceInfo();
+  const csInfo = useCreateServiceInfo();
 
   useEffect(() => {
-    if (ucInfo?.createReq.state.type === 'success') {
+    if (csInfo?.createReq.state.type === 'success') {
       message.success('保存成功', 0.5).then(() => his.push(routerPrefix + '/' + entity));
     }
-  }, [ucInfo?.createReq.state.type]);
+  }, [csInfo?.createReq.state.type]);
 
   // 空守卫
-  if (!ucInfo) return null;
+  if (!csInfo) return null;
 
-  const handleSubmit = (d: any) => ucInfo?.createReq.refresh(d);
+  const handleSubmit = (d: any) => csInfo?.createReq.refresh(d);
 
-  return (
-    <div>
-      <Form layout='vertical' onFinish={handleSubmit}>
-        <SchemaFormItems rootSchema={ucInfo.querySchema} />
+  const renderCreatorForm = () => {
+    const formProps: FormProps = { layout: 'vertical', onFinish: handleSubmit };
+
+    if (customRender?.form) {
+      const ret = customRender.form({ formProps, csInfo });
+      if (ret !== false) return ret;
+    }
+
+    return (
+      <Form {...formProps}>
+        <SchemaFormItems rootSchema={csInfo.querySchema} />
         <Form.Item>
           <Button
             type='primary'
             htmlType='submit'
-            loading={ucInfo.createReq.state.type === 'loading'}
-            disabled={ucInfo.createReq.state.type === 'loading'}
+            loading={csInfo.createReq.state.type === 'loading'}
+            disabled={csInfo.createReq.state.type === 'loading'}
           >
             确定
           </Button>
         </Form.Item>
       </Form>
-    </div>
-  );
+    );
+  };
+
+  return <div>{renderCreatorForm()}</div>;
 };

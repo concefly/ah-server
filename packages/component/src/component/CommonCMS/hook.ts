@@ -1,9 +1,10 @@
 import { useEffect, useMemo, useState } from 'react';
-import { useRequest } from '../../hook';
+import { useRequest } from 'ah-hook';
 import { useCMSContext } from './context';
-import { defaultLabelRender } from './locale';
+import { __ } from './locale';
 import { RichSchema } from './RichSchema';
 import { ICMSProps, IPagination } from './type';
+import { Logger } from 'ah-logger';
 
 export function useListServiceInfo() {
   const { listService } = useCMSContext();
@@ -49,7 +50,10 @@ export function useReadServiceInfo(id: any) {
 
   // 初始化刷新
   useEffect(() => {
-    readReq?.refresh({ [idMapper]: id });
+    if (id && readReq) {
+      const query = { [idMapper]: id };
+      readReq.refresh(query);
+    }
   }, []);
 
   // 空守卫
@@ -106,9 +110,14 @@ export function useLabelRender() {
     const labelRender = (
       ctx: Parameters<Required<Required<ICMSProps>['customRender']>['label']>[0]
     ) => {
-      return customRender?.label?.(ctx) || defaultLabelRender(ctx) || ctx.follow;
+      return customRender?.label?.(ctx) || ctx.schema?.title || __(ctx.key);
     };
 
     return labelRender;
   }, [customRender?.label]);
+}
+
+const defaultLogger = new Logger('CMS');
+export function useLogger(name: string) {
+  return useMemo(() => defaultLogger.extend(name), [name]);
 }

@@ -22,11 +22,9 @@ export type IUseRequestRet<Q, T> = {
 };
 
 export function useRequest<Q, T>(service: (q: Q) => Promise<T>): IUseRequestRet<Q, T>;
-
 export function useRequest<Q, T>(
   service: ((q: Q) => Promise<T>) | undefined
 ): IUseRequestRet<Q, T> | undefined;
-
 export function useRequest(service: any) {
   const lastQueryRef = useRef();
 

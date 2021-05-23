@@ -1,11 +1,13 @@
 import React from 'react';
-import { Button, Col, Form, Input, InputNumber, Row, Select } from 'antd';
+import { Button, Col, Divider, Form, Input, InputNumber, Radio, Row } from 'antd';
 import { RichSchema } from './RichSchema';
-import { CMSContext, useCMSContext } from './context';
-import { useLabelRender } from './hook';
+import { useCMSContext } from './context';
+import { useLabelRender, useLogger } from './hook';
 import { FieldSelect } from './Field/Select';
-import { FormListFieldData } from 'antd/lib/form/FormList';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
+import { DatePicker } from './Field/DatePicker';
+import _ from 'lodash';
+import { Switch } from './Field/Switch';
 
 export interface ISchemaFormProps {
   /** form 顶层 schema */
@@ -14,80 +16,107 @@ export interface ISchemaFormProps {
   /** 当前 schema */
   schema?: RichSchema;
 
-  /** 当前字段 dotPath */
-  dotPath?: string[];
+  name?: (string | number)[];
+  fieldKey?: (string | number)[];
+  label?: string[];
+
+  /** 是否 form list **顶层** */
+  isListField?: boolean;
 
   /** 当前字段 required */
   required?: boolean;
-
-  fieldTail?: any;
-
-  /** 这个是 Form.List 要用的数据 */
-  __listFieldData?: FormListFieldData;
 }
 
 export const SchemaFormItems = ({
   rootSchema,
   schema = rootSchema,
-  dotPath = [],
+  name = [],
+  fieldKey = name,
+  label = [],
+  isListField = false,
   required,
-  fieldTail,
-  __listFieldData,
 }: ISchemaFormProps): any => {
-  const { idMapper = 'id' } = useCMSContext();
   const labelRender = useLabelRender();
+  const { customRender } = useCMSContext();
+  const logger = useLogger('SchemaFormItems');
+
+  // 确保 object 是第一层
+  if (name.length === 0 && schema.type !== 'object') {
+    logger.error('level 0 is not object, skip');
+    return null;
+  }
+
+  // object，一定要是第一层
+  if (schema.type === 'object' && schema.properties) {
+    return Object.entries(schema.properties).map(([pKey, pSchema]) => {
+      return (
+        <SchemaFormItems
+          key={pKey}
+          rootSchema={rootSchema}
+          schema={pSchema}
+          name={[...name, pKey]}
+          fieldKey={[...fieldKey, pKey]}
+          label={[...label, labelRender({ key: pKey, schema: pSchema })]}
+          isListField={isListField}
+          required={schema.required?.includes(pKey)}
+        />
+      );
+    });
+  }
 
   const uiDef = schema.getUiDef();
 
   // idMapper 比较特殊，对比 dotPath 顶层
-  const hidden = uiDef?.hideInForm || dotPath[0] === idMapper;
-  const label = labelRender({ rootSchema, follow: dotPath.join('.'), schema }) || dotPath.join('.');
+  const hidden = uiDef?.hideInForm;
 
-  // FIXME: 复杂类型的 list field 未验证，先不做处理
-  if (!__listFieldData) {
-    // object，一般是第一层
-    if (schema.type === 'object' && schema.properties) {
-      return Object.entries(schema.properties).map(([pKey, pSchema]) => {
-        return (
-          <SchemaFormItems
-            key={pKey}
-            rootSchema={rootSchema}
-            schema={pSchema}
-            dotPath={[...dotPath, pKey]}
-            required={schema.required?.includes(pKey)}
-          />
-        );
-      });
-    }
-
-    // array，一般是从 object 递归下来的
-    if (schema.type === 'array' && schema.items) {
-      return (
-        <Form.List name={dotPath}>
+  // array，一般是从 object 递归下来的
+  if (schema.type === 'array' && schema.items) {
+    return (
+      <div style={{ paddingLeft: 16, borderLeft: '6px solid #bbb' }}>
+        <Form.List name={name}>
           {(fields, { remove, add }, { errors }) => {
             return (
               <>
                 {fields.map((field, i) => {
                   return (
-                    <SchemaFormItems
+                    <section
                       key={field.key}
-                      rootSchema={rootSchema}
-                      schema={schema.items}
-                      dotPath={[...dotPath, field.name + '']}
-                      __listFieldData={field}
-                      fieldTail={
-                        <>
-                          {fields.length > 1 && (
-                            <MinusCircleOutlined onClick={() => remove(field.name)} />
+                      style={{
+                        padding: 16,
+                        border: '1px solid #ccc',
+                        marginBottom: 16,
+                      }}
+                    >
+                      <Row>
+                        <Col span={20}>
+                          <SchemaFormItems
+                            rootSchema={rootSchema}
+                            schema={schema.items}
+                            name={[i]}
+                            fieldKey={[i]}
+                            label={[...label, i + '']}
+                            isListField={true}
+                          />
+                        </Col>
+                        <Col span={4}>
+                          {fields.length >= 2 && (
+                            <Row align='middle' justify='center' style={{ height: '100%' }}>
+                              <Col
+                                onClick={() => remove(field.name)}
+                                style={{ color: 'red', cursor: 'pointer' }}
+                              >
+                                <DeleteOutlined /> 删除
+                              </Col>
+                            </Row>
                           )}
-                        </>
-                      }
-                    />
+                        </Col>
+                      </Row>
+                    </section>
                   );
                 })}
                 <Form.Item>
                   <Button type='dashed' onClick={() => add()} icon={<PlusOutlined />}>
-                    {label}
+                    {label.join('.')}
                   </Button>
                   <Form.ErrorList errors={errors} />
                 </Form.Item>
@@ -95,57 +124,80 @@ export const SchemaFormItems = ({
             );
           }}
         </Form.List>
-      );
-    }
+      </div>
+    );
   }
 
   // 其他基本类型
   const formField = uiDef?.formField;
 
-  const filed = formField ? (
-    formField.type === 'select' ? (
-      <FieldSelect {...formField} />
-    ) : formField.type === 'textarea' ? (
-      <Input.TextArea autoSize style={{ width: '100%' }} allowClear />
-    ) : null
-  ) : (
-    <Input style={{ width: '100%' }} allowClear />
-  );
+  let filed: any = <Input style={{ width: '100%' }} allowClear />;
 
-  uiDef?.formField?.type === 'select' ? (
-    <FieldSelect {...uiDef.formField} />
-  ) : schema.type === 'integer' ? (
-    <InputNumber style={{ width: '100%' }} />
-  ) : (
-    <Input style={{ width: '100%' }} allowClear />
-  );
-
-  // list field 特殊处理(和 antd 内部 item dotPath 逻辑有关)
-  const innerFiledItem = __listFieldData ? (
-    <Form.Item {...__listFieldData} noStyle>
-      {filed}
-    </Form.Item>
-  ) : (
-    <Form.Item name={dotPath} noStyle>
-      {filed}
-    </Form.Item>
-  );
+  if (customRender?.formField) {
+    const ret = customRender.formField({
+      rootSchema,
+      schema,
+      name,
+      fieldKey,
+      label,
+      isListField,
+      required,
+    });
+    if (ret !== false) filed = ret;
+  } else if (formField) {
+    // 1. 判断 formField
+    if (formField.type === 'select')
+      filed = <FieldSelect {...formField} style={{ minWidth: 200 }} />;
+    else if (formField.type === 'textarea') {
+      filed = <Input.TextArea autoSize style={{ width: '100%' }} allowClear />;
+    } else if (formField.type === 'datepicker') {
+      filed = <DatePicker showTime={formField.showTime} />;
+    }
+    //
+  } else if (uiDef) {
+    // 2. 判断 format
+    if (uiDef.format) {
+      if (uiDef.format.type === 'timestamp') {
+        filed = <DatePicker showTime />;
+      }
+    }
+  } else {
+    // 3. 判断基本类型
+    if (schema.type === 'string' || schema.type === 'integer') {
+      if (schema.enum) {
+        filed = (
+          <Radio.Group>
+            {schema.enum.map((v: any) => (
+              <React.Fragment key={v}>
+                <Radio value={v}>{labelRender({ key: v })}</Radio>
+              </React.Fragment>
+            ))}
+          </Radio.Group>
+        );
+      } else {
+        filed =
+          schema.type === 'string' ? (
+            <Input style={{ width: '100%' }} allowClear />
+          ) : (
+            <InputNumber style={{ width: '100%' }} />
+          );
+      }
+    } else if (schema.type === 'boolean') {
+      filed = <Switch />;
+    }
+  }
 
   return (
     <Form.Item
-      label={label}
+      label={label.join('.')}
       hidden={hidden}
       required={required}
-      rules={[{ required, message: `请填写 ${label}` }]}
+      name={name}
+      fieldKey={fieldKey}
+      isListField={isListField}
+      rules={[{ required, message: `请填写 ${label.join('.')}` }]}
     >
-      {fieldTail ? (
-        <Row gutter={8} align='middle'>
-          <Col span={20}>{innerFiledItem}</Col>
-          <Col span={4}>{fieldTail}</Col>
-        </Row>
-      ) : (
-        innerFiledItem
-      )}
+      {filed}
     </Form.Item>
   );
 };

@@ -1,14 +1,16 @@
 import React, { useEffect } from 'react';
-import { Button, Form, Spin, Typography, message } from 'antd';
+import { Button, Form, Spin, Typography, message, FormProps } from 'antd';
 import { Link, useHistory } from 'react-router-dom';
 import { SchemaFormItems } from './SchemaFormItems';
 import { useReadServiceInfo, useUpdateServiceInfo } from './hook';
 import { useCMSContext } from './context';
+import _ from 'lodash';
 
 const { Text } = Typography;
 
 export const Editor = ({ id }: { id: any }) => {
-  const { entity, routerPrefix, updateService } = useCMSContext();
+  const cmsCtx = useCMSContext();
+  const { entity, routerPrefix, updateService, idMapper = 'id', customRender } = cmsCtx;
 
   const [formIns] = Form.useForm();
   const his = useHistory();
@@ -31,7 +33,43 @@ export const Editor = ({ id }: { id: any }) => {
   // 空守卫
   if (!rsInfo || !usInfo) return null;
 
-  const handleSubmit = (d: any) => usInfo.updateReq.refresh(d);
+  const handleSubmit = (d: any) => {
+    // 浅比较第一层，去掉值相同的字段，减少传输量
+    const diffKeys = rsInfo.detailData
+      ? Object.keys(d).filter(k => !_.isEqual(rsInfo.detailData[k], d[k]))
+      : Object.keys(d);
+
+    const uploadKeys = [...diffKeys, idMapper];
+    const uploadValue = _.pick(d, uploadKeys);
+    usInfo.updateReq.refresh(uploadValue);
+  };
+
+  const renderEditorForm = () => {
+    if (!updateService) return null;
+
+    const formProps: FormProps = { layout: 'vertical', form: formIns, onFinish: handleSubmit };
+
+    if (customRender?.form) {
+      const ret = customRender.form({ formProps, rsInfo, usInfo });
+      if (ret !== false) return ret;
+    }
+
+    return (
+      <Form {...formProps}>
+        <SchemaFormItems rootSchema={usInfo.querySchema} />
+        <Form.Item>
+          <Button
+            type='primary'
+            htmlType='submit'
+            loading={usInfo.updateReq.state.type === 'loading'}
+            disabled={usInfo.updateReq.state.type === 'loading'}
+          >
+            确定
+          </Button>
+        </Form.Item>
+      </Form>
+    );
+  };
 
   return (
     <div>
@@ -40,23 +78,7 @@ export const Editor = ({ id }: { id: any }) => {
           <Button>返回</Button>
         </Link>
       </div>
-      <Spin spinning={rsInfo.readReq.state.type === 'loading'}>
-        {updateService && (
-          <Form layout='vertical' form={formIns} onFinish={handleSubmit}>
-            <SchemaFormItems rootSchema={usInfo.querySchema} />
-            <Form.Item>
-              <Button
-                type='primary'
-                htmlType='submit'
-                loading={usInfo.updateReq.state.type === 'loading'}
-                disabled={usInfo.updateReq.state.type === 'loading'}
-              >
-                确定
-              </Button>
-            </Form.Item>
-          </Form>
-        )}
-      </Spin>
+      <Spin spinning={rsInfo.readReq.state.type === 'loading'}>{renderEditorForm()}</Spin>
     </div>
   );
 };

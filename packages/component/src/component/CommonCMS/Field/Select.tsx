@@ -1,7 +1,7 @@
 import React, { useEffect, useLayoutEffect } from 'react';
 import { Select } from 'antd';
 import { CMSContext, useCMSContext, useCMSEntityContext } from '../context';
-import { useListServiceInfo } from '../hook';
+import { useListServiceInfo, useReadServiceInfo } from '../hook';
 import _ from 'lodash';
 
 type IFieldSelect = {
@@ -9,9 +9,9 @@ type IFieldSelect = {
   queryMapper: string;
   resultDisplayMapper?: string;
   fieldValueMapper?: string;
-
   value?: any;
   onChange?: (v: any) => any;
+  style?: React.CSSProperties;
 };
 
 export const FieldSelect = (p: IFieldSelect) => {
@@ -31,28 +31,25 @@ export const EntityFieldSelect = ({
   queryMapper,
   fieldValueMapper = 'id',
   onChange,
+  style,
 }: IFieldSelect) => {
   const lsInfo = useListServiceInfo();
-  const { idMapper = 'id' } = useCMSContext();
+  const rdInfo = useReadServiceInfo(value);
 
-  // 初始化刷新
-  useEffect(() => {
-    lsInfo?.req.refresh({ [idMapper]: value });
-  }, [value]);
-
-  if (!lsInfo) return null;
+  if (!lsInfo || !rdInfo) return null;
 
   const handleSearch = _.debounce((q: string) => lsInfo.req.refresh({ [queryMapper]: q }), 300);
 
   return (
     <Select
+      allowClear
       showSearch
       loading={lsInfo.req.state.type === 'loading'}
       value={value}
       onChange={onChange}
       onSearch={handleSearch}
       filterOption={false}
-      options={lsInfo.pageData?.list.map(d => {
+      options={(lsInfo.pageData?.list || [rdInfo.detailData])?.map(d => {
         return {
           label: resultDisplayMapper
             ? _.get(d, resultDisplayMapper)
@@ -60,6 +57,7 @@ export const EntityFieldSelect = ({
           value: _.get(d, fieldValueMapper),
         };
       })}
+      style={style}
     />
   );
 };

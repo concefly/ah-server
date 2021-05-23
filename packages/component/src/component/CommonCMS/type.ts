@@ -1,6 +1,9 @@
 import { Schema } from 'ah-api-type';
 import { RichSchema } from './RichSchema';
 import { IDataFormatterProps } from './DataFormatter';
+import { ISchemaFormProps } from './SchemaFormItems';
+import { FormProps } from 'antd';
+import { useCreateServiceInfo, useReadServiceInfo, useUpdateServiceInfo } from './hook';
 
 export interface IPagination<D> {
   total: number;
@@ -18,7 +21,14 @@ export interface ICMSProps {
   customRender?: {
     detail?: any;
     dataFormatter?(ctx: IDataFormatterProps): any;
-    label?(ctx: { rootSchema: RichSchema; follow: string; schema: RichSchema }): string | undefined;
+    formField?(ctx: ISchemaFormProps): any;
+    form?(ctx: {
+      formProps: FormProps;
+      rsInfo?: ReturnType<typeof useReadServiceInfo>;
+      csInfo?: ReturnType<typeof useCreateServiceInfo>;
+      usInfo?: ReturnType<typeof useUpdateServiceInfo>;
+    }): any;
+    label?(ctx: { key: string; schema?: RichSchema }): string | undefined;
   };
 
   listService: IApiService;

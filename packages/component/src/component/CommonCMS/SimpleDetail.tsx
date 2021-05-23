@@ -8,13 +8,7 @@ export const SimpleDetail = ({ id }: { id: any }) => {
 
   return (
     <div>
-      <Typography.Paragraph strong>
-        {rsInfo?.detailData
-          ? rsInfo.detailData.title ||
-            rsInfo.detailData.name ||
-            _.truncate(rsInfo.detailData.content, { length: 20 })
-          : id + ''}
-      </Typography.Paragraph>
+      <Typography.Paragraph strong>{rsInfo?.detailDataTitle || id}</Typography.Paragraph>
     </div>
   );
 };

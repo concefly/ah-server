@@ -18,27 +18,51 @@ export type SchemaUi = {
         type: 'select';
         /** 搜索实体 */
         entity: string;
-        /** 搜索内容字段，支持 dotPath */
+        /** 搜索 url query 字段 */
         queryMapper: string;
         /** 搜索结果显示字段，支持 dotPath，默认自动生成的 title */
         resultDisplayMapper?: string;
         /** 搜索结果回填表单字段，支持 dotPath，默认 id */
         fieldValueMapper?: string;
       }
+    | {
+        type: 'datepicker';
+        showTime?: boolean;
+      }
     | { type: 'textarea' }
-    | { type: 'never' };
+    | { type: 'richtext' };
 
   follow?: string;
 
-  /** 渲染类型 */
-  type?: 'timestamp' | 'image' | 'richtext' | 'url' | 'pre';
-  renderPipe?: { type: 'truncate'; length?: number }[];
+  /** 渲染格式化 */
+  format?:
+    | { type: 'timestamp' }
+    | { type: 'image' }
+    | { type: 'richtext'; pre?: boolean }
+    | { type: 'url' }
+    | { type: 'template'; template: string; richtext?: boolean };
 
-  /** 渲染的时候链接到实体 */
+  /** 渲染的时候链接到实体
+   * - 适用于 string, integer, object
+   */
   linkToEntity?: {
     name: string;
-    idMapper?: string;
+
+    /** 查询字段
+     * - object 默认映射成 id, 支持 dotPath
+     * - string, integer 无效
+     */
+    queryMapper?: string;
+
+    /** 内容显示字段，支持
+     * - object 默认自动生成 title
+     * - string, integer 默认显示自身值
+     */
+    displayMapper?: string;
   };
+
+  /** 自定义标签 */
+  tags?: string[];
 };
 
 export type SchemaBase = {
@@ -70,5 +94,9 @@ export type SchemaString = SchemaBase & {
   enum?: string[];
 };
 
+export type SchemaBoolean = SchemaBase & {
+  type: 'boolean';
+};
+
 /** json schema 子集 */
-export type Schema = SchemaObject | SchemaArray | SchemaInteger | SchemaString;
+export type Schema = SchemaObject | SchemaArray | SchemaInteger | SchemaString | SchemaBoolean;

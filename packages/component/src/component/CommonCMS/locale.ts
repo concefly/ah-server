@@ -20,12 +20,3 @@ export const defaultLocale: { [k: string]: string } = {
 export const __ = (msg: string) => {
   return defaultLocale[msg] || msg;
 };
-
-export const defaultLabelRender: Required<Required<ICMSProps>['customRender']>['label'] = ({
-  rootSchema,
-  follow,
-  schema,
-}) => {
-  if (schema.title) return schema.title;
-  return follow.split('.').map(__).join('.');
-};

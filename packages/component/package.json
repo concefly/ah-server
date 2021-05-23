@@ -49,6 +49,8 @@
   "sideEffects": false,
   "dependencies": {
     "ah-api-type": "^1.1.1",
+    "ah-logger": "^0.1.4",
+    "ah-hook": "^1.0.0",
     "dayjs": "^1.10.4",
     "jsonschema": "^1.4.0",
     "lodash": "^4.17.21",

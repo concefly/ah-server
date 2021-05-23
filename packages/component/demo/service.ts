@@ -82,12 +82,42 @@ export const service = {
     //
     create: createMethod(
       async (q: any) => {
+        console.log('@@@', 'create ->', q);
         await delay(200);
         return getRandomData(q.id);
       },
       {
         tags: ['cms:device:create'],
-        query: { schema: { type: 'object', properties: { title: { type: 'string' } } } },
+        query: {
+          schema: {
+            type: 'object',
+            properties: {
+              title: { type: 'string' },
+              tags: { type: 'array', items: { type: 'string' } },
+              data: {
+                type: 'array',
+                items: {
+                  type: 'object',
+                  properties: {
+                    name: { type: 'string' },
+                    title: { type: 'string' },
+                    members: {
+                      type: 'array',
+                      items: {
+                        type: 'object',
+                        properties: {
+                          id: { type: 'integer' },
+                        },
+                        required: ['id'],
+                      },
+                    },
+                  },
+                  required: ['name'],
+                },
+              },
+            },
+          },
+        },
         response: {
           schema: {},
         },

@@ -7,7 +7,7 @@ import _ from 'lodash';
 import { SchemaFormItems } from './SchemaFormItems';
 import { useCMSContext } from './context';
 import { useLabelRender, useListServiceInfo } from './hook';
-import { useUrlState } from '../../hook/useUrlState';
+import { useUrlState } from 'ah-hook';
 
 export const List = () => {
   const {
@@ -49,7 +49,7 @@ export const List = () => {
 
   const renderSearchForm = () => {
     return (
-      <Form layout='inline' onFinish={d => handleRefresh({ ...d })}>
+      <Form layout='inline' initialValues={urlState} onFinish={d => handleRefresh({ ...d })}>
         <SchemaFormItems rootSchema={lsInfo.querySchema} />
         <Form.Item>
           <Button type='primary' htmlType='submit'>
@@ -77,7 +77,7 @@ export const List = () => {
       columns.push(
         <Table.Column
           key={follow}
-          title={labelRender({ rootSchema: itemSchema, follow, schema: itemDataSchema })}
+          title={labelRender({ key: _.last(follow.split('.'))!, schema: itemDataSchema })}
           dataIndex={follow.split('.')}
           render={(value: any, rootValue: any) => {
             return (
