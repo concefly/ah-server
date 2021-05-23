@@ -1,6 +1,6 @@
 {
   "name": "ah-hook",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "ah-hook",
   "files": [
     "dist"
@@ -26,6 +26,5 @@
     "react": "^17.0.2",
     "react-router-dom": "^5.2.0"
   },
-  "sideEffects": false,
-  "dependencies": {}
+  "sideEffects": false
 }
