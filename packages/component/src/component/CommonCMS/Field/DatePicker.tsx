@@ -14,7 +14,7 @@ export const DatePicker = (p: {
   return (
     <BaseDatePicker
       {...p}
-      value={dayjs(p.value)}
+      value={p.value ? dayjs(p.value) : undefined}
       onChange={v => p.onChange?.(v?.format('YYYY-MM-DD HH:mm:ss'))}
     />
   );

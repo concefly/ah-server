@@ -39,6 +39,7 @@ export const EntityFieldSelect = ({
   if (!lsInfo || !rdInfo) return null;
 
   const handleSearch = _.debounce((q: string) => lsInfo.req.refresh({ [queryMapper]: q }), 300);
+  const handleFocus = () => lsInfo.req.refresh({});
 
   return (
     <Select
@@ -47,6 +48,7 @@ export const EntityFieldSelect = ({
       loading={lsInfo.req.state.type === 'loading'}
       value={value}
       onChange={onChange}
+      onFocus={handleFocus}
       onSearch={handleSearch}
       filterOption={false}
       options={(lsInfo.pageData?.list || [rdInfo.detailData])?.map(d => {

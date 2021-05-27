@@ -12,17 +12,10 @@ export const Editor = ({ id }: { id: any }) => {
   const cmsCtx = useCMSContext();
   const { entity, routerPrefix, updateService, idMapper = 'id', customRender } = cmsCtx;
 
-  const [formIns] = Form.useForm();
   const his = useHistory();
 
   const rsInfo = useReadServiceInfo(id);
   const usInfo = useUpdateServiceInfo();
-
-  useEffect(() => {
-    if (rsInfo?.detailData) {
-      formIns.setFieldsValue(rsInfo.detailData);
-    }
-  }, [rsInfo?.detailData]);
 
   useEffect(() => {
     if (usInfo?.updateReq.state.type === 'success') {
@@ -47,7 +40,14 @@ export const Editor = ({ id }: { id: any }) => {
   const renderEditorForm = () => {
     if (!updateService) return null;
 
-    const formProps: FormProps = { layout: 'vertical', form: formIns, onFinish: handleSubmit };
+    const formProps: FormProps = {
+      // type fix
+      // detailData 有值的时候重新初始化表单
+      ...{ key: !!rsInfo.detailData + '' },
+      initialValues: rsInfo.detailData,
+      layout: 'vertical',
+      onFinish: handleSubmit,
+    };
 
     if (customRender?.form) {
       const ret = customRender.form({ formProps, rsInfo, usInfo });
