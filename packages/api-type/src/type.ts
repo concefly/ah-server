@@ -89,6 +89,11 @@ export type SchemaInteger = SchemaBase & {
   enum?: number[];
 };
 
+export type SchemaNumber = SchemaBase & {
+  type: 'number';
+  enum?: number[];
+};
+
 export type SchemaString = SchemaBase & {
   type: 'string';
   enum?: string[];
@@ -99,4 +104,10 @@ export type SchemaBoolean = SchemaBase & {
 };
 
 /** json schema 子集 */
-export type Schema = SchemaObject | SchemaArray | SchemaInteger | SchemaString | SchemaBoolean;
+export type Schema =
+  | SchemaObject
+  | SchemaArray
+  | SchemaInteger
+  | SchemaNumber
+  | SchemaString
+  | SchemaBoolean;
