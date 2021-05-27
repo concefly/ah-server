@@ -79,7 +79,7 @@ export type IReserveService_createCalender_Query = {
     end_time: string;
     location?: string;
     detail?: string;
-    status?: string;
+    status?: 'enabled' | 'disabled';
     meta?: { richDetailMeta?: object };
   }>;
 };
@@ -91,7 +91,7 @@ export type IReserveService_updateCalender_Query = {
   end_time?: string;
   location?: string;
   detail?: string;
-  status?: string;
+  status?: 'enabled' | 'disabled';
   meta?: { richDetailMeta?: object };
 };
 export type IReserveService_updateCalender_Resp = any;
@@ -134,8 +134,8 @@ export type IUserService_getLeaveInfo_Resp = any;
 
 export type IUserService_addReserveRequest_Query = {
   calendar_id: number;
-  type: string;
-  meta?: { members?: Array<{ nick: string; gender: string; phone: string }> };
+  type: 'team' | 'personal';
+  meta?: { members?: Array<{ nick: string; gender: '男' | '女'; phone: string }> };
 };
 export type IUserService_addReserveRequest_Resp = any;
 
@@ -1139,23 +1139,23 @@ export type ISnapshotcontrollerService_create_Resp = string;
 
 export type IFaceindexcontrollerService_getPage_Query = any;
 export type IFaceindexcontrollerService_getPage_Resp = {
-  pageSize: any;
-  pageNum: any;
-  total: any;
+  pageSize: number;
+  pageNum: number;
+  total: number;
   list: Array<{
-    id: any;
+    id: number;
     created_at: string;
     updated_at: string;
-    age: any;
-    gender: any;
-    expression: any;
+    age: number;
+    gender: number;
+    expression: number;
     snapshot?: {
-      id: any;
+      id: number;
       created_at: string;
       updated_at: string;
       ossPath: string;
-      faceIndexStatus: string;
-      device?: { id: any; created_at: string; updated_at: string; name: string; title: string };
+      faceIndexStatus: 'init' | 'running' | 'finish' | 'error';
+      device?: { id: number; created_at: string; updated_at: string; name: string; title: string };
     };
   }>;
 };
@@ -1164,31 +1164,31 @@ export type IAuthcontrollerService_login_Query = { name: string; password: strin
 export type IAuthcontrollerService_login_Resp = {
   accessToken: string;
   user: {
-    id: any;
+    id: number;
     created_at: string;
     updated_at: string;
     name: string;
     nick: string;
-    role: string;
+    role: 'normal' | 'admin';
   };
 };
 
 export type IUsercontrollerService_getUser_Query = any;
 export type IUsercontrollerService_getUser_Resp = {
-  id: any;
+  id: number;
   created_at: string;
   updated_at: string;
   name: string;
   nick: string;
-  role: string;
+  role: 'normal' | 'admin';
 };
 
 export type IDevicecontrollerService_getPage_Query = any;
 export type IDevicecontrollerService_getPage_Resp = {
-  pageSize: any;
-  pageNum: any;
-  total: any;
-  list: Array<{ id: any; created_at: string; updated_at: string; name: string; title: string }>;
+  pageSize: number;
+  pageNum: number;
+  total: number;
+  list: Array<{ id: number; created_at: string; updated_at: string; name: string; title: string }>;
 };
 
 /** schemas */

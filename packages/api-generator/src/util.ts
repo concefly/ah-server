@@ -1,8 +1,8 @@
 import { OpenAPIV3 as API } from 'openapi-types';
 import _ from 'lodash';
 import { Schema } from 'jsonschema';
-
 import { inspect } from 'util';
+import { schema2TsTypeLiteral } from './schema2TsTypeLiteral';
 
 export const log = (...args: any[]) => {
   console.log(...args.map(arg => inspect(arg, { showHidden: false, depth: null })));
@@ -139,44 +139,6 @@ export function renderService(apiDoc: API.Document, opt: { operationIdSplitter?:
   });
 
   return serviceMap;
-}
-
-export function schema2TsTypeLiteral(s?: Schema): string {
-  if (!s) return 'never';
-
-  if (s.type === 'string') return 'string';
-  if (s.type === 'integer') return 'number';
-
-  if (s.type === 'array') {
-    return `Array<${schema2TsTypeLiteral((s.items as any) || '{}')}>`;
-  }
-
-  if (s.type === 'object') {
-    {
-      if (s.properties) {
-        return [
-          '{',
-          Object.entries(s.properties).map(([pn, pv]) => {
-            const isRequired =
-              typeof s.required === 'boolean'
-                ? s.required
-                : Array.isArray(s.required)
-                ? s.required.includes(pn)
-                : false;
-
-            const tsType = schema2TsTypeLiteral(pv);
-
-            return `${pn}${isRequired ? '' : '?'}: ${tsType}`;
-          }),
-          '}',
-        ].join(' ');
-      }
-
-      return 'object';
-    }
-  }
-
-  return 'any';
 }
 
 /** 从数据结构猜测 schema */

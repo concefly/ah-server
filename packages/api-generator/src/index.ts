@@ -8,6 +8,7 @@ import prettier from 'prettier';
 import RefParser from '@apidevtools/json-schema-ref-parser';
 
 export * from './util';
+export * from './schema2TsTypeLiteral';
 
 export interface IConfig {
   input?: { type: 'local'; filename: string } | { type: 'remote'; url: string; headers?: any };
