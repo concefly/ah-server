@@ -1,6 +1,6 @@
 {
   "name": "ah-api-generator",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "ah-api-generator",
   "files": [
     "dist",
@@ -17,8 +17,8 @@
   "author": "concefly@foxmail.com",
   "license": "ISC",
   "devDependencies": {
-    "@types/jest": "^26.0.16",
     "@types/ejs": "^3.0.5",
+    "@types/jest": "^26.0.16",
     "@types/lodash": "^4.14.167",
     "@types/node": "^12.7.1",
     "ah-workflow": "^1.0.6",
