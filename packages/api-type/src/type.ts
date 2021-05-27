@@ -71,6 +71,10 @@ export type SchemaBase = {
   __ui?: SchemaUi;
 };
 
+export type SchemaOneOf = SchemaBase & {
+  oneOf: Schema[];
+};
+
 export type SchemaObject = SchemaBase & {
   type: 'object';
   properties?: {
@@ -105,6 +109,7 @@ export type SchemaBoolean = SchemaBase & {
 
 /** json schema 子集 */
 export type Schema =
+  | SchemaOneOf
   | SchemaObject
   | SchemaArray
   | SchemaInteger
