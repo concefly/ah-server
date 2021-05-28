@@ -116,3 +116,24 @@ export type Schema =
   | SchemaNumber
   | SchemaString
   | SchemaBoolean;
+
+// type guard
+export const isSchemaOneOf = (s: Schema): s is SchemaOneOf => 'oneOf' in s;
+
+export const isSchemaObject = (s: Schema): s is SchemaObject =>
+  !isSchemaOneOf(s) && s.type === 'object';
+
+export const isSchemaArray = (s: Schema): s is SchemaArray =>
+  !isSchemaOneOf(s) && s.type === 'array';
+
+export const isSchemaInteger = (s: Schema): s is SchemaInteger =>
+  !isSchemaOneOf(s) && s.type === 'integer';
+
+export const isSchemaNumber = (s: Schema): s is SchemaNumber =>
+  !isSchemaOneOf(s) && s.type === 'number';
+
+export const isSchemaString = (s: Schema): s is SchemaString =>
+  !isSchemaOneOf(s) && s.type === 'string';
+
+export const isSchemaBoolean = (s: Schema): s is SchemaBoolean =>
+  !isSchemaOneOf(s) && s.type === 'boolean';
