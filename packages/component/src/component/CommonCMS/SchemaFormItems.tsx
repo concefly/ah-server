@@ -1,6 +1,5 @@
 import React from 'react';
 import { Button, Col, Divider, Form, Input, InputNumber, Radio, Row } from 'antd';
-import { RichSchema } from './RichSchema';
 import { useCMSContext } from './context';
 import { useLabelRender, useLogger } from './hook';
 import { FieldSelect } from './Field/Select';
@@ -8,13 +7,22 @@ import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { DatePicker } from './Field/DatePicker';
 import _ from 'lodash';
 import { Switch } from './Field/Switch';
+import {
+  isSchemaArray,
+  isSchemaBoolean,
+  isSchemaInteger,
+  isSchemaNumber,
+  isSchemaObject,
+  isSchemaString,
+  Schema,
+} from 'ah-api-type';
 
 export interface ISchemaFormProps {
   /** form 顶层 schema */
-  rootSchema: RichSchema;
+  rootSchema: Schema;
 
   /** 当前 schema */
-  schema?: RichSchema;
+  schema?: Schema;
 
   name?: (string | number)[];
   fieldKey?: (string | number)[];
@@ -41,13 +49,13 @@ export const SchemaFormItems = ({
   const logger = useLogger('SchemaFormItems');
 
   // 确保 object 是第一层
-  if (name.length === 0 && schema.type !== 'object') {
+  if (name.length === 0 && !isSchemaObject(schema)) {
     logger.error('level 0 is not object, skip');
     return null;
   }
 
   // object，一定要是第一层
-  if (schema.type === 'object' && schema.properties) {
+  if (isSchemaObject(schema) && schema.properties) {
     return Object.entries(schema.properties).map(([pKey, pSchema]) => {
       return (
         <SchemaFormItems
@@ -64,13 +72,13 @@ export const SchemaFormItems = ({
     });
   }
 
-  const uiDef = schema.getUiDef();
+  const uiDef = schema.__ui;
 
   // idMapper 比较特殊，对比 dotPath 顶层
   const hidden = uiDef?.hideInForm;
 
   // array，一般是从 object 递归下来的
-  if (schema.type === 'array' && schema.items) {
+  if (isSchemaArray(schema) && schema.items) {
     return (
       <div style={{ paddingLeft: 16, borderLeft: '6px solid #bbb' }}>
         <Form.List name={name}>
@@ -163,7 +171,7 @@ export const SchemaFormItems = ({
     }
   } else {
     // 3. 判断基本类型
-    if (schema.type === 'string' || schema.type === 'integer') {
+    if (isSchemaString(schema) || isSchemaInteger(schema) || isSchemaNumber(schema)) {
       if (schema.enum) {
         filed = (
           <Radio.Group>
@@ -175,14 +183,13 @@ export const SchemaFormItems = ({
           </Radio.Group>
         );
       } else {
-        filed =
-          schema.type === 'string' ? (
-            <Input style={{ width: '100%' }} allowClear />
-          ) : (
-            <InputNumber style={{ width: '100%' }} />
-          );
+        filed = isSchemaString(schema) ? (
+          <Input style={{ width: '100%' }} allowClear />
+        ) : (
+          <InputNumber style={{ width: '100%' }} />
+        );
       }
-    } else if (schema.type === 'boolean') {
+    } else if (isSchemaBoolean(schema)) {
       filed = <Switch />;
     }
   }

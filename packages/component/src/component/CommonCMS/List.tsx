@@ -8,6 +8,8 @@ import { SchemaFormItems } from './SchemaFormItems';
 import { useCMSContext } from './context';
 import { useLabelRender, useListServiceInfo } from './hook';
 import { useUrlState } from 'ah-hook';
+import { SchemaHelper } from './SchemHelper';
+import { isSchemaObject } from 'ah-api-type';
 
 export const List = () => {
   const {
@@ -66,12 +68,14 @@ export const List = () => {
     let columns: any[] = [];
 
     const itemSchema = lsInfo.itemSchema;
-    const uiDef = itemSchema.getUiDef();
-    const follows = uiDef?.list?.columns || Object.keys(itemSchema.properties || {});
+    const uiDef = SchemaHelper.getUiDef(itemSchema);
+    const follows =
+      uiDef?.list?.columns ||
+      Object.keys((isSchemaObject(itemSchema) && itemSchema.properties) || {});
 
     // object 类型 -> 每个字段占一列
     follows.forEach(follow => {
-      const itemDataSchema = itemSchema.getByDataDotPath(follow);
+      const itemDataSchema = SchemaHelper.getByDataDotPath(itemSchema, follow);
       if (!itemDataSchema) return;
 
       columns.push(

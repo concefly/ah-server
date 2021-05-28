@@ -2,9 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { useRequest } from 'ah-hook';
 import { useCMSContext } from './context';
 import { __ } from './locale';
-import { RichSchema } from './RichSchema';
 import { ICMSProps, IPagination } from './type';
 import { Logger } from 'ah-logger';
+import { SchemaHelper } from './SchemHelper';
 
 export function useListServiceInfo() {
   const { listService } = useCMSContext();
@@ -17,17 +17,10 @@ export function useListServiceInfo() {
     if (req.state.type === 'success' && generatePage) setPageData(generatePage(req.state.data));
   }, [req.state.type]);
 
-  const querySchema = useMemo(
-    () => RichSchema.create(listService.$meta.query.schema),
-    [listService]
-  );
+  const querySchema = useMemo(() => listService.$meta.query.schema, [listService]);
+  const respSchema = useMemo(() => listService.$meta.response.schema, [listService]);
 
-  const respSchema = useMemo(
-    () => RichSchema.create(listService.$meta.response.schema),
-    [listService]
-  );
-
-  const generatePage = useMemo(() => respSchema.getPaginationGenerator(), [respSchema]);
+  const generatePage = useMemo(() => SchemaHelper.getPaginationGenerator(respSchema), [respSchema]);
   if (!generatePage) return undefined;
 
   return { req, pageData, querySchema, itemSchema: generatePage.itemSchema };
@@ -39,14 +32,14 @@ export function useReadServiceInfo(id: any) {
   const readReq = useRequest(readService);
 
   const readRspSchema = useMemo(
-    () =>
-      readService?.$meta.response.schema
-        ? RichSchema.create(readService.$meta.response.schema)
-        : undefined,
+    () => (readService?.$meta.response.schema ? readService.$meta.response.schema : undefined),
     [readService]
   );
 
-  const generateDetail = useMemo(() => readRspSchema?.getDetailGenerator(), [readRspSchema]);
+  const generateDetail = useMemo(
+    () => (readRspSchema ? SchemaHelper.getDetailGenerator(readRspSchema) : undefined),
+    [readRspSchema]
+  );
 
   // 初始化刷新
   useEffect(() => {
@@ -62,7 +55,7 @@ export function useReadServiceInfo(id: any) {
   const detailData =
     readReq.state.type === 'success' ? generateDetail(readReq.state.data) : undefined;
 
-  const detailDataTitle = generateDetail.itemSchema.getTitleGenerator()?.(detailData);
+  const detailDataTitle = SchemaHelper.getTitleGenerator(generateDetail.itemSchema)?.(detailData);
 
   return { readReq, itemSchema: generateDetail.itemSchema, detailData, detailDataTitle };
 }
@@ -72,10 +65,7 @@ export function useUpdateServiceInfo() {
   const updateReq = useRequest(updateService);
 
   const updateReqSchema = useMemo(
-    () =>
-      updateService?.$meta.query.schema
-        ? RichSchema.create(updateService.$meta.query.schema)
-        : undefined,
+    () => (updateService?.$meta.query.schema ? updateService.$meta.query.schema : undefined),
     [updateService]
   );
 
@@ -90,10 +80,7 @@ export function useCreateServiceInfo() {
   const createReq = useRequest(createService);
 
   const querySchema = useMemo(
-    () =>
-      createService?.$meta.query.schema
-        ? RichSchema.create(createService.$meta.query.schema)
-        : undefined,
+    () => (createService?.$meta.query.schema ? createService.$meta.query.schema : undefined),
     [createService]
   );
 

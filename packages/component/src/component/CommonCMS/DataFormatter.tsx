@@ -1,11 +1,18 @@
 import React from 'react';
 import dayjs from 'dayjs';
 import { Typography, Image, Popover, Tag } from 'antd';
-import { RichSchema } from './RichSchema';
 import _ from 'lodash';
 import { CMSContext, useCMSContext, useCMSListContext } from './context';
 import { Link } from 'react-router-dom';
 import { SimpleDetail } from './SimpleDetail';
+import { SchemaHelper } from './SchemHelper';
+import {
+  isSchemaArray,
+  isSchemaInteger,
+  isSchemaObject,
+  isSchemaString,
+  Schema,
+} from 'ah-api-type';
 
 const { Text } = Typography;
 
@@ -13,7 +20,7 @@ export interface IDataFormatterProps {
   rootValue: any;
   follow: string;
   value: any;
-  schema: RichSchema;
+  schema: Schema;
   style?: React.CSSProperties;
 }
 
@@ -30,12 +37,12 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
 
   if (typeof value === 'undefined') return <Text type='secondary'>(未定义)</Text>;
 
-  const uiDef = schema.getUiDef();
+  const uiDef = SchemaHelper.getUiDef(schema);
 
   // 处理 uiDef
   if (uiDef) {
     if (uiDef.follow) {
-      const nextSchema = schema.getByDataDotPath(uiDef.follow);
+      const nextSchema = SchemaHelper.getByDataDotPath(schema, uiDef.follow);
       if (nextSchema) {
         return (
           <DataFormatter
@@ -54,17 +61,16 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
       const targetEntityProps = listCtx.find(c => c.entity === uiDef.linkToEntity!.name);
 
       if (targetEntityProps) {
-        const detailQueryId =
-          schema.type === 'object'
-            ? _.get(value, uiDef.linkToEntity.queryMapper || 'id')
-            : schema.type === 'string' || schema.type === 'integer'
-            ? value
-            : undefined;
+        const detailQueryId = isSchemaObject(schema)
+          ? _.get(value, uiDef.linkToEntity.queryMapper || 'id')
+          : isSchemaString(schema) || isSchemaInteger(schema)
+          ? value
+          : undefined;
 
         const displayText =
-          schema.type === 'string' || schema.type === 'integer'
+          isSchemaString(schema) || isSchemaInteger(schema)
             ? value
-            : schema.getTitleGenerator()?.(value) || '点击前往';
+            : SchemaHelper.getTitleGenerator(schema)?.(value) || '点击前往';
 
         const popoverContent = (
           <CMSContext.Provider value={targetEntityProps}>
@@ -123,8 +129,11 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
 
       // template
       if (uiDef.format.type === 'template') {
-        const renderData =
-          schema.type === 'object' ? value : schema.type === 'array' ? { list: value } : value + '';
+        const renderData = isSchemaObject(schema)
+          ? value
+          : isSchemaArray(schema)
+          ? { list: value }
+          : value + '';
 
         if (typeof renderData === 'string') return <Text style={style}>{renderData}</Text>;
 
@@ -153,9 +162,9 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
   }
 
   // array 类型
-  if (schema.type === 'array' && schema.items && Array.isArray(value)) {
+  if (isSchemaArray(schema) && schema.items && Array.isArray(value)) {
     // string[] 的效果特殊处理下
-    if (schema.items.type === 'string') {
+    if (isSchemaString(schema.items)) {
       return value.map((v, i) => <Tag key={i}>{v}</Tag>);
     }
 
@@ -177,7 +186,7 @@ export const DataFormatter = ({ rootValue, follow, value, schema, style }: IData
   }
 
   // 处理基本类型
-  if (schema.type === 'string' || schema.type === 'integer') {
+  if (isSchemaString(schema) || isSchemaInteger(schema)) {
     return <Text style={style}>{value}</Text>;
   }
 

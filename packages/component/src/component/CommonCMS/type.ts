@@ -1,5 +1,4 @@
 import { Schema } from 'ah-api-type';
-import { RichSchema } from './RichSchema';
 import { IDataFormatterProps } from './DataFormatter';
 import { ISchemaFormProps } from './SchemaFormItems';
 import { FormProps } from 'antd';
@@ -28,7 +27,7 @@ export interface ICMSProps {
       csInfo?: ReturnType<typeof useCreateServiceInfo>;
       usInfo?: ReturnType<typeof useUpdateServiceInfo>;
     }): any;
-    label?(ctx: { key: string; schema?: RichSchema }): string | undefined;
+    label?(ctx: { key: string; schema?: Schema }): string | undefined;
   };
 
   listService: IApiService;

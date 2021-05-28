@@ -7,6 +7,8 @@ import { DataFormatter } from './DataFormatter';
 import _ from 'lodash';
 import { useCMSContext } from './context';
 import { useReadServiceInfo, useLabelRender, useLogger } from './hook';
+import { SchemaHelper } from './SchemHelper';
+import { isSchemaObject } from 'ah-api-type';
 
 export const Detail = ({ id }: { id: any }) => {
   const his = useHistory();
@@ -32,12 +34,15 @@ export const Detail = ({ id }: { id: any }) => {
     if (rsInfo) {
       const itemSchema = rsInfo.itemSchema;
 
-      const uiDef = itemSchema.getUiDef();
-      const follows = uiDef?.detail?.columns || Object.keys(itemSchema.properties || {});
+      const uiDef = SchemaHelper.getUiDef(itemSchema);
+      const follows =
+        uiDef?.detail?.columns ||
+        Object.keys((isSchemaObject(itemSchema) && itemSchema.properties) || {});
+
       const split = uiDef?.detail?.split;
 
       follows.map(follow => {
-        const subSchema = itemSchema.getByDataDotPath(follow);
+        const subSchema = SchemaHelper.getByDataDotPath(itemSchema, follow);
         if (!subSchema) {
           logger.error(`no subSchema at ${follow}, skip`);
           return;
