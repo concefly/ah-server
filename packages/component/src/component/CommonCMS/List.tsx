@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react';
-import { Button, Col, Form, Row, Space, Table } from 'antd';
+import { Button, Col, Form, Popconfirm, Row, Space, Table } from 'antd';
 import { Link } from 'react-router-dom';
 import { __ } from './locale';
 import { DataFormatter } from './DataFormatter';
@@ -132,7 +132,7 @@ export const List = () => {
     <div>
       <div ref={topDivRef} />
       <Row justify='space-between' style={{ marginBottom: 16 }}>
-        <Col>{renderSearchForm()}</Col>
+        <Col style={{ flex: 1, width: 1 }}>{renderSearchForm()}</Col>
         <Space>
           <Button
             loading={lsInfo.req.state.type === 'loading'}

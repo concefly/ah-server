@@ -11,7 +11,7 @@ export function validate<T>(data: any, schema: Schema): T {
 
         if (_sch.type === 'object') {
           // 只允许 object properties 声明过的属性(安全原因)
-          return _sch.properties ? pick(_ins, Object.keys(_sch.properties)) : _ins;
+          return _sch.properties ? omitUndefined(pick(_ins, Object.keys(_sch.properties))) : _ins;
         }
       }
 
@@ -68,3 +68,13 @@ export function getOwnPropertyEntries(target: any) {
 
   return list;
 }
+
+export const omitUndefined = <T extends Record<string, any>>(data: T): Partial<T> => {
+  const re: any = {};
+
+  for (const key of Object.keys(data)) {
+    if (typeof data[key] !== 'undefined') re[key] = data[key];
+  }
+
+  return re;
+};

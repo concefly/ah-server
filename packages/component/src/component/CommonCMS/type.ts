@@ -18,7 +18,10 @@ export interface ICMSProps {
   render?(content: any): any;
 
   customRender?: {
-    detail?: any;
+    detailAction?(ctx: {
+      cmsProps: ICMSProps;
+      rsInfo: NonNullable<ReturnType<typeof useReadServiceInfo>>;
+    }): any;
     dataFormatter?(ctx: IDataFormatterProps): any;
     formField?(ctx: ISchemaFormProps): any;
     form?(ctx: {

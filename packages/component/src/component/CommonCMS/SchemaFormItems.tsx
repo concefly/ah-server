@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Col, Divider, Form, Input, InputNumber, Radio, Row } from 'antd';
+import { Button, Col, Typography, Form, Input, InputNumber, Radio, Row } from 'antd';
 import { useCMSContext } from './context';
 import { useLabelRender, useLogger } from './hook';
 import { FieldSelect } from './Field/Select';
@@ -16,6 +16,8 @@ import {
   isSchemaString,
   Schema,
 } from 'ah-api-type';
+
+const { Text } = Typography;
 
 export interface ISchemaFormProps {
   /** form 顶层 schema */
@@ -176,10 +178,13 @@ export const SchemaFormItems = ({
         filed = (
           <Radio.Group>
             {schema.enum.map((v: any) => (
-              <React.Fragment key={v}>
-                <Radio value={v}>{labelRender({ key: v })}</Radio>
-              </React.Fragment>
+              <Radio key={v} value={v}>
+                {labelRender({ key: v })}
+              </Radio>
             ))}
+            <Radio value={undefined}>
+              <Text type='secondary'>(不指定)</Text>
+            </Radio>
           </Radio.Group>
         );
       } else {

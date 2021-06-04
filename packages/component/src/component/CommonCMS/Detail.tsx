@@ -1,5 +1,5 @@
 import React from 'react';
-import { Button, Card, Col, Descriptions, Popconfirm, Row, Space, Typography } from 'antd';
+import { Button, Card, Col, Descriptions, Divider, Popconfirm, Row, Space, Typography } from 'antd';
 import { useRequest } from 'ah-hook';
 import { Link, useHistory } from 'react-router-dom';
 import { __ } from './locale';
@@ -12,20 +12,74 @@ import { isSchemaObject } from 'ah-api-type';
 
 export const Detail = ({ id }: { id: any }) => {
   const his = useHistory();
+  const cmsProps = useCMSContext();
+
   const {
     createService,
     routerPrefix,
     entity,
     updateService,
     deleteService,
+    customRender,
     idMapper = 'id',
-  } = useCMSContext();
+  } = cmsProps;
 
   const logger = useLogger('Detail');
 
   const deleteReq = useRequest(deleteService);
   const rsInfo = useReadServiceInfo(id);
   const labelRender = useLabelRender();
+
+  const renderActions = () => {
+    const customAction = (rsInfo && customRender?.detailAction?.({ rsInfo, cmsProps })) || null;
+
+    return (
+      <Space>
+        {customAction && (
+          <>
+            {customAction}
+            <Divider type='vertical' />
+          </>
+        )}
+        {updateService && (
+          <Link to={`${routerPrefix}/${entity}/${id}/edit`}>
+            <Button type='primary'>编辑</Button>
+          </Link>
+        )}
+        {createService && (
+          <Link to={`${routerPrefix}/${entity}/new`}>
+            <Button>新建</Button>
+          </Link>
+        )}
+        <Button
+          loading={rsInfo?.readReq.state.type === 'loading'}
+          disabled={rsInfo?.readReq.state.type === 'loading'}
+          onClick={() => rsInfo?.readReq.refresh(rsInfo.readReq.lastQuery()!)}
+        >
+          刷新
+        </Button>
+        {deleteReq && (
+          <Popconfirm
+            title='确定删除？'
+            placement='left'
+            onConfirm={() =>
+              deleteReq
+                .refresh({ [idMapper]: id })
+                .ret.then(() => his.replace(routerPrefix + '/' + entity))
+            }
+          >
+            <Button
+              danger
+              loading={deleteReq.state.type === 'loading'}
+              disabled={deleteReq.state.type === 'loading'}
+            >
+              删除
+            </Button>
+          </Popconfirm>
+        )}
+      </Space>
+    );
+  };
 
   const renderItems = () => {
     let items: any[] = [];
@@ -95,46 +149,7 @@ export const Detail = ({ id }: { id: any }) => {
             {rsInfo?.detailDataTitle || id}
           </Typography.Title>
         </Col>
-        <Col>
-          <Space>
-            {updateService && (
-              <Link to={`${routerPrefix}/${entity}/${id}/edit`}>
-                <Button type='primary'>编辑</Button>
-              </Link>
-            )}
-            {createService && (
-              <Link to={`${routerPrefix}/${entity}/new`}>
-                <Button>新建</Button>
-              </Link>
-            )}
-            <Button
-              loading={rsInfo?.readReq.state.type === 'loading'}
-              disabled={rsInfo?.readReq.state.type === 'loading'}
-              onClick={() => rsInfo?.readReq.refresh(rsInfo.readReq.lastQuery()!)}
-            >
-              刷新
-            </Button>
-            {deleteReq && (
-              <Popconfirm
-                title='确定删除？'
-                placement='left'
-                onConfirm={() =>
-                  deleteReq
-                    .refresh({ [idMapper]: id })
-                    .then(() => his.replace(routerPrefix + '/' + entity))
-                }
-              >
-                <Button
-                  danger
-                  loading={deleteReq.state.type === 'loading'}
-                  disabled={deleteReq.state.type === 'loading'}
-                >
-                  删除
-                </Button>
-              </Popconfirm>
-            )}
-          </Space>
-        </Col>
+        <Col>{renderActions()}</Col>
       </Row>
       <Row gutter={16}>
         {splitContent ? (

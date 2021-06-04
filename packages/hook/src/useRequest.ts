@@ -17,7 +17,10 @@ export type IUseRequestRet<Q, T> = {
         type: 'fail';
         err: Error;
       };
-  refresh: (q: Q) => Promise<void>;
+  refresh: (q: Q) => {
+    ret: Promise<T>;
+    cancel: (reason?: string) => void;
+  };
   lastQuery: () => Q | undefined;
 };
 
@@ -25,6 +28,7 @@ export function useRequest<Q, T>(service: (q: Q) => Promise<T>): IUseRequestRet<
 export function useRequest<Q, T>(
   service: ((q: Q) => Promise<T>) | undefined
 ): IUseRequestRet<Q, T> | undefined;
+
 export function useRequest(service: any) {
   const lastQueryRef = useRef();
 
@@ -35,18 +39,38 @@ export function useRequest(service: any) {
     | { type: 'fail'; err: Error }
   >(() => ({ type: 'init' }));
 
-  const refresh = async (q: any) => {
+  const refresh = (q: any) => {
     lastQueryRef.current = q;
+
+    const token: {
+      ret: any;
+      cancel: (reason?: string) => void;
+    } = { ret: undefined, cancel: () => {} };
 
     st.setState({ type: 'loading' });
 
-    try {
-      const data = await service(q);
-      st.setState({ type: 'success', data });
-    } catch (err) {
-      console.error(err);
-      st.setState({ type: 'fail', err });
-    }
+    token.ret = Promise.race([
+      //
+      service(q),
+      // 竞速取消
+      new Promise((_, reject) => {
+        token.cancel = (reason = 'refresh cancel') => {
+          reject(Object.assign(new Error(reason), { __cancel: true }));
+        };
+      }),
+    ])
+      .then(data => st.setState({ type: 'success', data }))
+      .catch(err => {
+        if (err.__cancel) {
+          console.info(err.message);
+          return;
+        }
+
+        console.error(err);
+        st.setState({ type: 'fail', err });
+      });
+
+    return token;
   };
 
   if (!service) return;
