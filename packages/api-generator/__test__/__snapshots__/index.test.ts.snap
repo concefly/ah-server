@@ -1165,10 +1165,10 @@ export class PageService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.PageService_getList_Query,
+        schema: ServiceSchemas.PageService_getList_Query as any,
       },
       response: {
-        schema: ServiceSchemas.PageService_getList_Resp,
+        schema: ServiceSchemas.PageService_getList_Resp as any,
       },
     }
   );
@@ -1194,10 +1194,10 @@ export class PageService extends BaseService {
       method: 'POST',
       description: '',
       query: {
-        schema: ServiceSchemas.PageService_createOne_Query,
+        schema: ServiceSchemas.PageService_createOne_Query as any,
       },
       response: {
-        schema: ServiceSchemas.PageService_createOne_Resp,
+        schema: ServiceSchemas.PageService_createOne_Resp as any,
       },
     }
   );
@@ -1223,10 +1223,10 @@ export class PageService extends BaseService {
       method: 'PUT',
       description: '',
       query: {
-        schema: ServiceSchemas.PageService_updateOne_Query,
+        schema: ServiceSchemas.PageService_updateOne_Query as any,
       },
       response: {
-        schema: ServiceSchemas.PageService_updateOne_Resp,
+        schema: ServiceSchemas.PageService_updateOne_Resp as any,
       },
     }
   );
@@ -1252,10 +1252,10 @@ export class PageService extends BaseService {
       method: 'DELETE',
       description: '',
       query: {
-        schema: ServiceSchemas.PageService_removeOne_Query,
+        schema: ServiceSchemas.PageService_removeOne_Query as any,
       },
       response: {
-        schema: ServiceSchemas.PageService_removeOne_Resp,
+        schema: ServiceSchemas.PageService_removeOne_Resp as any,
       },
     }
   );
@@ -1283,10 +1283,10 @@ export class ReserveService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_getActivityList_Query,
+        schema: ServiceSchemas.ReserveService_getActivityList_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_getActivityList_Resp,
+        schema: ServiceSchemas.ReserveService_getActivityList_Resp as any,
       },
     }
   );
@@ -1312,10 +1312,10 @@ export class ReserveService extends BaseService {
       method: 'POST',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_createActivity_Query,
+        schema: ServiceSchemas.ReserveService_createActivity_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_createActivity_Resp,
+        schema: ServiceSchemas.ReserveService_createActivity_Resp as any,
       },
     }
   );
@@ -1341,10 +1341,10 @@ export class ReserveService extends BaseService {
       method: 'PUT',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_updateActivity_Query,
+        schema: ServiceSchemas.ReserveService_updateActivity_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_updateActivity_Resp,
+        schema: ServiceSchemas.ReserveService_updateActivity_Resp as any,
       },
     }
   );
@@ -1370,10 +1370,10 @@ export class ReserveService extends BaseService {
       method: 'DELETE',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_removeActivity_Query,
+        schema: ServiceSchemas.ReserveService_removeActivity_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_removeActivity_Resp,
+        schema: ServiceSchemas.ReserveService_removeActivity_Resp as any,
       },
     }
   );
@@ -1399,10 +1399,10 @@ export class ReserveService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_getCalenderList_Query,
+        schema: ServiceSchemas.ReserveService_getCalenderList_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_getCalenderList_Resp,
+        schema: ServiceSchemas.ReserveService_getCalenderList_Resp as any,
       },
     }
   );
@@ -1428,10 +1428,10 @@ export class ReserveService extends BaseService {
       method: 'POST',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_createCalender_Query,
+        schema: ServiceSchemas.ReserveService_createCalender_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_createCalender_Resp,
+        schema: ServiceSchemas.ReserveService_createCalender_Resp as any,
       },
     }
   );
@@ -1457,10 +1457,10 @@ export class ReserveService extends BaseService {
       method: 'PUT',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_updateCalender_Query,
+        schema: ServiceSchemas.ReserveService_updateCalender_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_updateCalender_Resp,
+        schema: ServiceSchemas.ReserveService_updateCalender_Resp as any,
       },
     }
   );
@@ -1486,10 +1486,10 @@ export class ReserveService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_getUserRequestList_Query,
+        schema: ServiceSchemas.ReserveService_getUserRequestList_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_getUserRequestList_Resp,
+        schema: ServiceSchemas.ReserveService_getUserRequestList_Resp as any,
       },
     }
   );
@@ -1515,10 +1515,10 @@ export class ReserveService extends BaseService {
       method: 'PUT',
       description: '',
       query: {
-        schema: ServiceSchemas.ReserveService_confirmUserRequest_Query,
+        schema: ServiceSchemas.ReserveService_confirmUserRequest_Query as any,
       },
       response: {
-        schema: ServiceSchemas.ReserveService_confirmUserRequest_Resp,
+        schema: ServiceSchemas.ReserveService_confirmUserRequest_Resp as any,
       },
     }
   );
@@ -1542,10 +1542,10 @@ export class SystemService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.SystemService_getApiDoc_Query,
+        schema: ServiceSchemas.SystemService_getApiDoc_Query as any,
       },
       response: {
-        schema: ServiceSchemas.SystemService_getApiDoc_Resp,
+        schema: ServiceSchemas.SystemService_getApiDoc_Resp as any,
       },
     }
   );
@@ -1567,10 +1567,10 @@ export class SystemService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.SystemService_getList_Query,
+        schema: ServiceSchemas.SystemService_getList_Query as any,
       },
       response: {
-        schema: ServiceSchemas.SystemService_getList_Resp,
+        schema: ServiceSchemas.SystemService_getList_Resp as any,
       },
     }
   );
@@ -1592,10 +1592,10 @@ export class SystemService extends BaseService {
       method: 'PUT',
       description: '',
       query: {
-        schema: ServiceSchemas.SystemService_updateOne_Query,
+        schema: ServiceSchemas.SystemService_updateOne_Query as any,
       },
       response: {
-        schema: ServiceSchemas.SystemService_updateOne_Resp,
+        schema: ServiceSchemas.SystemService_updateOne_Resp as any,
       },
     }
   );
@@ -1619,10 +1619,10 @@ export class UserService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_getUserInfo_Query,
+        schema: ServiceSchemas.UserService_getUserInfo_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_getUserInfo_Resp,
+        schema: ServiceSchemas.UserService_getUserInfo_Resp as any,
       },
     }
   );
@@ -1647,10 +1647,10 @@ export class UserService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_updateSession_Query,
+        schema: ServiceSchemas.UserService_updateSession_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_updateSession_Resp,
+        schema: ServiceSchemas.UserService_updateSession_Resp as any,
       },
     }
   );
@@ -1675,10 +1675,10 @@ export class UserService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_getShiluRoles_Query,
+        schema: ServiceSchemas.UserService_getShiluRoles_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_getShiluRoles_Resp,
+        schema: ServiceSchemas.UserService_getShiluRoles_Resp as any,
       },
     }
   );
@@ -1704,10 +1704,10 @@ export class UserService extends BaseService {
       method: 'POST',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_assignShiluRoles_Query,
+        schema: ServiceSchemas.UserService_assignShiluRoles_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_assignShiluRoles_Resp,
+        schema: ServiceSchemas.UserService_assignShiluRoles_Resp as any,
       },
     }
   );
@@ -1733,10 +1733,10 @@ export class UserService extends BaseService {
       method: 'DELETE',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_removeShiluRoles_Query,
+        schema: ServiceSchemas.UserService_removeShiluRoles_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_removeShiluRoles_Resp,
+        schema: ServiceSchemas.UserService_removeShiluRoles_Resp as any,
       },
     }
   );
@@ -1762,10 +1762,10 @@ export class UserService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_getEnterCode_Query,
+        schema: ServiceSchemas.UserService_getEnterCode_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_getEnterCode_Resp,
+        schema: ServiceSchemas.UserService_getEnterCode_Resp as any,
       },
     }
   );
@@ -1791,10 +1791,10 @@ export class UserService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_getLeaveInfo_Query,
+        schema: ServiceSchemas.UserService_getLeaveInfo_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_getLeaveInfo_Resp,
+        schema: ServiceSchemas.UserService_getLeaveInfo_Resp as any,
       },
     }
   );
@@ -1820,10 +1820,10 @@ export class UserService extends BaseService {
       method: 'POST',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_addReserveRequest_Query,
+        schema: ServiceSchemas.UserService_addReserveRequest_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_addReserveRequest_Resp,
+        schema: ServiceSchemas.UserService_addReserveRequest_Resp as any,
       },
     }
   );
@@ -1849,10 +1849,10 @@ export class UserService extends BaseService {
       method: 'PUT',
       description: '',
       query: {
-        schema: ServiceSchemas.UserService_cancelReserveRequest_Query,
+        schema: ServiceSchemas.UserService_cancelReserveRequest_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UserService_cancelReserveRequest_Resp,
+        schema: ServiceSchemas.UserService_cancelReserveRequest_Resp as any,
       },
     }
   );
@@ -2084,10 +2084,10 @@ export class SnapshotcontrollerService extends BaseService {
       method: 'POST',
       description: '快照上传',
       query: {
-        schema: ServiceSchemas.SnapshotcontrollerService_create_Query,
+        schema: ServiceSchemas.SnapshotcontrollerService_create_Query as any,
       },
       response: {
-        schema: ServiceSchemas.SnapshotcontrollerService_create_Resp,
+        schema: ServiceSchemas.SnapshotcontrollerService_create_Resp as any,
       },
     }
   );
@@ -2113,10 +2113,10 @@ export class FaceindexcontrollerService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.FaceindexcontrollerService_getPage_Query,
+        schema: ServiceSchemas.FaceindexcontrollerService_getPage_Query as any,
       },
       response: {
-        schema: ServiceSchemas.FaceindexcontrollerService_getPage_Resp,
+        schema: ServiceSchemas.FaceindexcontrollerService_getPage_Resp as any,
       },
     }
   );
@@ -2143,10 +2143,10 @@ export class AuthcontrollerService extends BaseService {
       method: 'POST',
       description: '',
       query: {
-        schema: ServiceSchemas.AuthcontrollerService_login_Query,
+        schema: ServiceSchemas.AuthcontrollerService_login_Query as any,
       },
       response: {
-        schema: ServiceSchemas.AuthcontrollerService_login_Resp,
+        schema: ServiceSchemas.AuthcontrollerService_login_Resp as any,
       },
     }
   );
@@ -2169,10 +2169,10 @@ export class UsercontrollerService extends BaseService {
       method: 'GET',
       description: '获取用户信息',
       query: {
-        schema: ServiceSchemas.UsercontrollerService_getUser_Query,
+        schema: ServiceSchemas.UsercontrollerService_getUser_Query as any,
       },
       response: {
-        schema: ServiceSchemas.UsercontrollerService_getUser_Resp,
+        schema: ServiceSchemas.UsercontrollerService_getUser_Resp as any,
       },
     }
   );
@@ -2198,10 +2198,10 @@ export class DevicecontrollerService extends BaseService {
       method: 'GET',
       description: '',
       query: {
-        schema: ServiceSchemas.DevicecontrollerService_getPage_Query,
+        schema: ServiceSchemas.DevicecontrollerService_getPage_Query as any,
       },
       response: {
-        schema: ServiceSchemas.DevicecontrollerService_getPage_Resp,
+        schema: ServiceSchemas.DevicecontrollerService_getPage_Resp as any,
       },
     }
   );
