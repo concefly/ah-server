@@ -38,70 +38,67 @@ function getPaginationGenerator(
   schema: Schema,
   prefixDotPath = ''
 ): (((d: any) => IPagination<any>) & { itemSchema: Schema }) | undefined {
-  if (isSchemaOneOf(schema)) {
-    // oneOf, skip
-    return undefined;
-    //
-  } else {
-    if (isSchemaArray(schema) && schema.items) {
+  // oneOf, skip
+  if (isSchemaOneOf(schema)) return undefined;
+
+  if (isSchemaArray(schema) && schema.items) {
+    return Object.assign(
+      (data: any[]) => {
+        const nd = prefixDotPath ? _.get(data, prefixDotPath) : data;
+        return {
+          total: nd.length,
+          pageNum: 1,
+          pageSize: nd.length,
+          list: nd,
+        };
+      },
+      { itemSchema: schema.items }
+    );
+  }
+
+  if (isSchemaObject(schema) && schema.properties) {
+    let getList: ((d: any) => any[]) | undefined;
+    let getPageSize: ((d: any) => number) | undefined;
+    let getPageNum: ((d: any) => number) | undefined;
+    let getTotal: ((d: any) => number) | undefined;
+    let itemSchema: Schema | undefined;
+
+    Object.entries(schema.properties).forEach(([pn, pv]) => {
+      if (isSchemaArray(pv)) {
+        getList = d => d[pn];
+        itemSchema = pv.items;
+        //
+      } else if (isSchemaInteger(pv)) {
+        if (pn === 'pageSize' || pn === 'size') getPageSize = d => d[pn];
+        else if (pn === 'pageNum' || pn === 'current') getPageNum = d => d[pn];
+        else if (pn === 'total' || pn === 'count') getTotal = d => d[pn];
+      }
+    });
+
+    if (getTotal && getPageSize && getPageNum && itemSchema) {
       return Object.assign(
-        (data: any[]) => {
+        (data: any) => {
           const nd = prefixDotPath ? _.get(data, prefixDotPath) : data;
           return {
-            total: nd.length,
-            pageNum: 1,
-            pageSize: nd.length,
-            list: nd,
+            total: getTotal!(nd),
+            list: getList!(nd),
+            pageSize: getPageSize!(nd),
+            pageNum: getPageNum!(nd),
           };
         },
-        { itemSchema: schema.items }
+        { itemSchema }
       );
     }
 
-    if (isSchemaObject(schema) && schema.properties) {
-      let getList: ((d: any) => any[]) | undefined;
-      let getPageSize: ((d: any) => number) | undefined;
-      let getPageNum: ((d: any) => number) | undefined;
-      let getTotal: ((d: any) => number) | undefined;
-      let itemSchema: Schema | undefined;
+    // 这一层没有找到，递归往下找
+    let ret: ReturnType<typeof getPaginationGenerator>;
 
-      Object.entries(schema.properties).forEach(([pn, pv]) => {
-        if (isSchemaArray(pv)) {
-          getList = d => d[pn];
-          itemSchema = pv.items;
-          //
-        } else if (isSchemaInteger(pv)) {
-          if (pn === 'pageSize' || pn === 'size') getPageSize = d => d[pn];
-          else if (pn === 'pageNum' || pn === 'current') getPageNum = d => d[pn];
-          else if (pn === 'total' || pn === 'count') getTotal = d => d[pn];
-        }
-      });
+    Object.entries(schema.properties).some(([sn, subSchema]) => {
+      ret = getPaginationGenerator(subSchema, sn);
+      return !!ret;
+    });
 
-      if (getTotal && getPageSize && getPageNum && itemSchema) {
-        return Object.assign(
-          (data: any) => {
-            const nd = prefixDotPath ? _.get(data, prefixDotPath) : data;
-            return {
-              total: getTotal!(nd),
-              list: getList!(nd),
-              pageSize: getPageSize!(nd),
-              pageNum: getPageNum!(nd),
-            };
-          },
-          { itemSchema }
-        );
-      }
-
-      // 这一层没有找到，递归往下找
-      let ret: ReturnType<typeof getPaginationGenerator>;
-
-      Object.entries(schema.properties).some(([sn, subSchema]) => {
-        ret = getPaginationGenerator(subSchema, sn);
-        return !!ret;
-      });
-
-      return ret;
-    }
+    return ret;
   }
 }
 
