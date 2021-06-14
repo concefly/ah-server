@@ -1,6 +1,6 @@
 import { OpenAPIV3 as API } from 'openapi-types';
 import _ from 'lodash';
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 import { inspect } from 'util';
 import { schema2TsTypeLiteral } from './schema2TsTypeLiteral';
 
@@ -164,5 +164,5 @@ export function data2Schema(data: any): Schema {
     };
   }
 
-  return {};
+  return { type: 'object' };
 }

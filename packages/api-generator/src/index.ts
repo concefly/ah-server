@@ -15,6 +15,7 @@ export interface IConfig {
   operationIdSplitter?: string;
   template?: string;
   banner?: string;
+  noMeta?: boolean;
   dump?: string;
 }
 
@@ -41,6 +42,7 @@ export const generateAPIService = async (cfg: IConfig) => {
     input = { type: 'local', filename: 'api.json' },
     template = path.resolve(__dirname, '..', 'template.ejs'),
     dump,
+    noMeta,
     banner,
   } = cfg;
 
@@ -48,7 +50,11 @@ export const generateAPIService = async (cfg: IConfig) => {
   const serviceMap = renderService(apiDoc, { operationIdSplitter: cfg.operationIdSplitter });
 
   // render template
-  let content = ejs.render(fs.readFileSync(template, { encoding: 'utf-8' }), { serviceMap });
+  let content = ejs.render(fs.readFileSync(template, { encoding: 'utf-8' }), {
+    serviceMap,
+    extra: { noMeta },
+  });
+
   if (banner) content = banner + '\n' + content;
 
   // pretty

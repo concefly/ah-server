@@ -1,9 +1,9 @@
-import { Schema } from 'jsonschema';
+import { Schema } from 'ah-api-type';
 
 export function schema2TsTypeLiteral(s?: Schema): string {
   if (!s) return 'never';
 
-  if (s.oneOf) return s.oneOf.map(schema2TsTypeLiteral).join(' | ');
+  if ('oneOf' in s) return s.oneOf.map(schema2TsTypeLiteral).join(' | ');
 
   if (s.type === 'string') {
     if (s.enum)

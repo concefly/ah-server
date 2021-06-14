@@ -1,4 +1,4 @@
-import { Schema } from 'ah-api-type';
+import { IApiService, Schema } from 'ah-api-type';
 import { IDataFormatterProps } from './DataFormatter';
 import { ISchemaFormProps } from './SchemaFormItems';
 import { FormProps } from 'antd';
@@ -33,21 +33,9 @@ export interface ICMSProps {
     label?(ctx: { key: string; schema?: Schema }): string | undefined;
   };
 
-  listService: IApiService;
-  createService?: IApiService;
-  updateService?: IApiService;
-  readService?: IApiService;
-  deleteService?: IApiService;
+  listService: IApiService<any, any>;
+  createService?: IApiService<any, any>;
+  updateService?: IApiService<any, any>;
+  readService?: IApiService<any, any>;
+  deleteService?: IApiService<any, any>;
 }
-
-// TODO: 移到 api-generator
-export type IApiService = ((arg: any) => Promise<any>) & {
-  $meta: {
-    tags?: string[];
-    pathName: string;
-    method: string;
-    description: string;
-    query: { schema: Schema };
-    response: { schema: Schema };
-  };
-};

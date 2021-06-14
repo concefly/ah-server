@@ -7,8 +7,8 @@ const args = yargs
   .option('input', { alias: 'i', describe: 'apiDoc', type: 'string', required: true })
   .option('headers', { describe: 'fetch headers', type: 'array' })
   .option('operation-id-splitter', { describe: 'operationId 分隔符，默认', type: 'string' })
-  .option('template', { alias: 't', describe: '模板', type: 'string' })
   .option('banner', { alias: 'b', describe: 'banner', type: 'string' })
+  .option('no-meta', { describe: '不导出 meta 信息', type: 'boolean' })
   .option('dump', { alias: 'd', describe: '导出', type: 'string' }).argv;
 
 generateAPIService({
@@ -25,8 +25,8 @@ generateAPIService({
       }
     : { type: 'local', filename: args.input },
   operationIdSplitter: args['operation-id-splitter'],
-  template: args.template,
   banner: args.banner,
+  noMeta: args['no-meta'],
   dump: args.dump,
 })
   .then(content => {

@@ -48,6 +48,7 @@
   },
   "sideEffects": false,
   "dependencies": {
+    "@antv/g2plot": "^2.3.23",
     "ah-api-type": "^1.1.4",
     "ah-hook": "^1.0.1",
     "ah-logger": "^0.1.4",

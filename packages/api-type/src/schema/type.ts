@@ -63,6 +63,39 @@ export type SchemaUi = {
 
   /** 自定义标签 */
   tags?: string[];
+
+  /** 数据分析渲染 */
+  analyze?: {
+    panels: ((
+      | {
+          type: 'Pie';
+          /** 颜色映射字段, 默认 type */
+          colorField?: string;
+          /** 角度映射字段, 默认 value */
+          angleField?: string;
+        }
+      | {
+          type: 'Line';
+          /** x 轴字段 */
+          xField: string;
+          /** y 轴字段 */
+          yField: string;
+        }
+      | {
+          /** 柱形图 */
+          type: 'Column';
+          /** x 轴字段 */
+          xField: string;
+          /** y 轴字段 */
+          yField: string;
+        }
+    ) & {
+      title?: string;
+      dataIndex?: string;
+      /** 占据宽度，最大 24，默认 8 */
+      span?: number;
+    })[];
+  };
 };
 
 export type SchemaBase = {

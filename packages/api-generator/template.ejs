@@ -1,6 +1,5 @@
+import { createMethod, replaceUrlParams } from 'ah-api-generator/dist/runtime';
 import { BaseService } from './BaseService';
-
-
 
 /** interfaces */
 <% for (const [sName, rMap] of Object.entries(serviceMap)) { %>
@@ -37,41 +36,24 @@ export class <%= sName %>Service extends BaseService {
       '<%- rMeta.method %>',
       <% if (rMeta.query) { %>query,<% } %>
     )
-  },
-  {
-    <% if (rMeta.tags) {%> tags: <%- JSON.stringify(rMeta.tags) %>, <%}%>
-    pathName: '<%- rMeta.pathName %>',
-    method: '<%- rMeta.method %>',
-    description: '<%- rMeta.description %>',
-    query: {
-      schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Query,
-    },
-    response: {
-      schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Resp,
-    },
-  }
+  }, <% if (!extra.noMeta) { %>
+    {
+      <% if (rMeta.tags) {%> tags: <%- JSON.stringify(rMeta.tags) %>, <%}%>
+      pathName: '<%- rMeta.pathName %>',
+      method: '<%- rMeta.method %>',
+      description: '<%- rMeta.description %>',
+      query: {
+        schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Query,
+      },
+      response: {
+        schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Resp,
+      },
+    }
+  <% } %>
   )
   <% } %>
 }
 <% } %>
-
-export function replaceUrlParams(url: string, data?: any) {
-  if (!data) return url;
-
-  const match = url.match(/\:\w+/g);
-  if (match) {
-    const pnSet = new Set(match.map(p => p.replace(/^\:/, '')));
-    pnSet.forEach(p => {
-      url = url.replace(new RegExp(`\:${p}`, 'g'), data[p]);
-    });
-  }
-  
-  return url;
-}
-
-export function createMethod <T, M>(method: T, $meta: M) {
-  return Object.assign(method, { $meta });
-};
 
 export const createAllService = (tap?: (s: BaseService) => void) => {
   const result = {
