@@ -43,10 +43,10 @@ export class <%= sName %>Service extends BaseService {
       method: '<%- rMeta.method %>',
       description: '<%- rMeta.description %>',
       query: {
-        schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Query,
+        schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Query as any,
       },
       response: {
-        schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Resp,
+        schema: ServiceSchemas.<%= sName %>Service_<%= rName %>_Resp as any,
       },
     }
   <% } %>
